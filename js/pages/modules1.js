@@ -41,7 +41,7 @@ pages.hr = function(container) {
         <button class="btn btn-secondary btn-sm" id="hr-ai-insights-btn"><i class="fas fa-brain"></i> AI Insights</button>
       </div>
     </div>
-    <div class="stats-grid" id="hr-stats">
+    <div class="stats-grid" id="hr-stats" style="grid-template-columns: repeat(4, 1fr) !important;">
       <div class="stat-card" id="hr-stat-total"><div class="stat-card-header"><div class="stat-icon blue"><i class="fas fa-users"></i></div></div><div class="stat-value" id="hr-total">—</div><div class="stat-label">Total Employees</div></div>
       <div class="stat-card" id="hr-stat-active"><div class="stat-card-header"><div class="stat-icon green"><i class="fas fa-user-check"></i></div></div><div class="stat-value" id="hr-active">—</div><div class="stat-label">Active</div></div>
       <div class="stat-card" id="hr-stat-onleave"><div class="stat-card-header"><div class="stat-icon yellow"><i class="fas fa-plane-departure"></i></div></div><div class="stat-value" id="hr-onleave">12</div><div class="stat-label">On Leave</div></div>
@@ -55,7 +55,7 @@ pages.hr = function(container) {
     </div>
     
     <div id="hr-tab-employees" class="hr-tab-content" style="display:block;">
-      <div class="grid-2">
+      <div class="grid-2" style="grid-template-columns: repeat(2, 1fr);">
         <div class="card">
           <div class="card-header"><span class="card-title">Attendance This Week</span></div>
           <div class="chart-container"><canvas data-chart="attendance"></canvas></div>
@@ -769,7 +769,7 @@ pages.finance = function(container) {
         <button class="btn btn-secondary btn-sm" id="tax-calc-btn"><i class="fas fa-calculator"></i> Tax Calculator</button>
       </div>
     </div>
-    <div class="stats-grid">
+    <div class="stats-grid" style="grid-template-columns: repeat(4, 1fr) !important;">
       <div class="stat-card" id="fin-stat-revenue"><div class="stat-card-header"><div class="stat-icon green"><i class="fas fa-arrow-trend-up"></i></div></div><div class="stat-value" id="fin-revenue">—</div><div class="stat-label">Revenue (Paid Invoices)</div></div>
       <div class="stat-card" id="fin-stat-expenses"><div class="stat-card-header"><div class="stat-icon red"><i class="fas fa-arrow-trend-down"></i></div></div><div class="stat-value" id="fin-expenses">—</div><div class="stat-label">Total Expenses & Taxes</div></div>
       <div class="stat-card" id="fin-stat-pending"><div class="stat-card-header"><div class="stat-icon blue"><i class="fas fa-file-invoice-dollar"></i></div></div><div class="stat-value" id="fin-pending">—</div><div class="stat-label">Pending Invoices</div></div>

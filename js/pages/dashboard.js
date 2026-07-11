@@ -90,12 +90,24 @@ pages.dashboard = function(container) {
     <div class="page-header">
       <div><h2>Welcome back, Amit 👋</h2><p>Here's what's happening across your organization today.</p></div>
       <div class="page-actions">
-        <button class="btn btn-secondary btn-sm" onclick="window.exportHRReport()"><i class="fas fa-download"></i> Export</button>
-        <button class="btn btn-primary btn-sm"><i class="fas fa-plus"></i> Quick Action</button>
+        <div class="dropdown-wrapper" style="position:relative">
+          <button class="btn btn-secondary btn-sm" onclick="window.toggleExportDropdown(event)">
+            <i class="fas fa-download"></i> Export <i class="fas fa-chevron-down" style="font-size:10px;margin-left:4px"></i>
+          </button>
+          <div class="chart-dropdown" id="export-dropdown" style="width:160px">
+            <a href="#" onclick="window.exportHRReport(); window.toggleExportDropdown(event)">
+              <i class="fas fa-file-pdf"></i> Download PDF
+            </a>
+            <a href="#" onclick="window.exportEmployeesCSV(); window.toggleExportDropdown(event)">
+              <i class="fas fa-file-csv"></i> Download CSV
+            </a>
+          </div>
+        </div>
+        <button class="btn btn-primary btn-sm" onclick="window.openQuickActions()"><i class="fas fa-plus"></i> Quick Action</button>
       </div>
     </div>
-    <div class="stats-grid">${statsHTML}</div>
-    <div class="grid-2">
+    <div class="stats-grid" style="grid-template-columns: repeat(4, 1fr) !important;">${statsHTML}</div>
+    <div class="grid-2" style="grid-template-columns: repeat(2, 1fr) !important;">
       <div class="card"><div class="card-header"><div><span class="card-title">Revenue vs Expenses</span><br><span class="card-subtitle">Last 12 months overview</span></div><div class="chart-menu-wrapper" style="position:relative"><button class="btn btn-secondary btn-sm" onclick="window.toggleChartMenu(event,'chart-menu-revenue')"><i class="fas fa-ellipsis"></i></button><div class="chart-dropdown" id="chart-menu-revenue"><a href="#" onclick="window.downloadChartPNG(event,'revenue')"><i class="fas fa-image"></i> Download PNG</a><a href="#" onclick="window.exportChartCSV(event,'revenue')"><i class="fas fa-file-csv"></i> Export CSV</a><div class="dropdown-divider"></div><a href="#" onclick="window.refreshChart(event,'revenue')"><i class="fas fa-rotate"></i> Refresh</a><a href="#" onclick="window.fullscreenChart(event,'revenue')"><i class="fas fa-expand"></i> Fullscreen</a></div></div></div><div class="chart-container"><canvas data-chart="revenue"></canvas></div></div>
       <div class="card"><div class="card-header"><div><span class="card-title">Module Usage</span><br><span class="card-subtitle">Resource distribution</span></div><div class="chart-menu-wrapper" style="position:relative"><button class="btn btn-secondary btn-sm" onclick="window.toggleChartMenu(event,'chart-menu-doughnut')"><i class="fas fa-ellipsis"></i></button><div class="chart-dropdown" id="chart-menu-doughnut"><a href="#" onclick="window.downloadChartPNG(event,'doughnut')"><i class="fas fa-image"></i> Download PNG</a><a href="#" onclick="window.exportChartCSV(event,'doughnut')"><i class="fas fa-file-csv"></i> Export CSV</a><div class="dropdown-divider"></div><a href="#" onclick="window.refreshChart(event,'doughnut')"><i class="fas fa-rotate"></i> Refresh</a><a href="#" onclick="window.fullscreenChart(event,'doughnut')"><i class="fas fa-expand"></i> Fullscreen</a></div></div></div><div class="chart-container"><canvas data-chart="doughnut"></canvas></div></div>
     </div>
@@ -116,11 +128,11 @@ pages.dashboard = function(container) {
       </div>
       <div class="activity-list" style="max-height:400px;overflow-y:auto">${lowStockHTML}</div>
     </div>
-    <div class="grid-2">
+    <div class="grid-2" style="grid-template-columns: repeat(2, 1fr) !important;">
       <div class="card"><div class="card-header"><span class="card-title">Recent Activity</span><a href="#notifications" class="btn btn-secondary btn-sm">View All</a></div><div class="activity-list">${activityHTML}</div></div>
       <div class="card"><div class="card-header"><span class="card-title">Weekly Task Overview</span><button class="btn btn-secondary btn-sm" onclick="window.showWeeklyTasks()"><i class="fas fa-calendar"></i> This Week</button></div><div class="chart-container"><canvas data-chart="bar"></canvas></div></div>
     </div>
-    <div class="grid-3">
+    <div class="grid-3" style="grid-template-columns: repeat(3, 1fr) !important;">
       <div class="card"><div class="card-header"><span class="card-title">Pending Approvals</span><span class="badge badge-warning">${approvals.length} pending</span></div><div class="activity-list">${approvalsHTML}</div></div>
       <div class="card"><div class="card-header"><span class="card-title">Top Performers</span><span class="badge badge-success">This Month</span></div><div class="activity-list">${performersHTML}</div></div>
       <div class="card"><div class="card-header"><span class="card-title">System Health</span><span class="badge badge-success"><i class="fas fa-circle" style="font-size:6px"></i> All Systems Go</span></div><div class="activity-list">${healthHTML}</div></div>

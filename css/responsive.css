@@ -585,3 +585,23 @@ html {
     border: 1px solid #ddd;
   }
 }
+
+/* ══════════════════════════════════════════════════════════
+   LAYOUT LOCK — Force dashboard grids to stay horizontal
+   This overrides ALL responsive breakpoints above 900px
+   to prevent stat cards and panels from stacking.
+   ══════════════════════════════════════════════════════════ */
+@media (min-width: 900px) {
+  .stats-grid {
+    grid-template-columns: repeat(4, 1fr) !important;
+  }
+  .grid-2 {
+    grid-template-columns: repeat(2, 1fr) !important;
+  }
+  .grid-3 {
+    grid-template-columns: repeat(3, 1fr) !important;
+  }
+  .grid-4 {
+    grid-template-columns: repeat(4, 1fr) !important;
+  }
+}

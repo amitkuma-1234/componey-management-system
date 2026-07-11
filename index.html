@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en" data-theme="dark">
+
 <head>
     <script>
         if (!localStorage.getItem('amdox_auth_token')) {
@@ -22,20 +23,26 @@
 
     <!-- Chart.js -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+    
+    <!-- HTML5 QRCode -->
+    <script src="https://unpkg.com/html5-qrcode" type="text/javascript"></script>
+    <script src="https://cdn.jsdelivr.net/npm/jspdf@2.5.1/dist/jspdf.umd.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/jspdf-autotable@3.8.2/dist/jspdf.plugin.autotable.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+
     <!-- App Styles -->
-    <link rel="stylesheet" href="css/styles.css">
-    <link rel="manifest" href="manifest.json">
-    <script src="js/app-init.js"></script>
+    <link rel="stylesheet" href="css/styles.css?v=30">
 </head>
+
 <body>
     <!-- Preloader -->
     <div id="preloader">
         <div class="preloader-inner">
             <div class="preloader-logo">
-                <div class="logo-icon-large" style="width: 60px; height: 60px; margin: 0 auto 16px; background: rgba(255,255,255,0.05); border-radius: 16px; display: flex; align-items: center; justify-content: center; box-shadow: 0 0 30px rgba(99,102,241,0.2);">
-                    <i class="fas fa-cube" style="font-size: 32px; color: var(--accent);"></i>
+                <div class="logo-icon-large" style="background:none;box-shadow:none;padding:0;">
+                    <img src="Logo.jpeg" alt="AMDOX Technology" style="width:120px;height:120px;object-fit:contain;border-radius:16px;">
                 </div>
-            </div>
                 <h2>Amdox ERP Suite</h2>
                 <p>Initializing AI-Powered Platform...</p>
                 <div class="preloader-bar">
@@ -47,12 +54,15 @@
 
     <!-- App Container -->
     <div id="app" class="app-container">
+        <!-- Sidebar Overlay (mobile) -->
+        <div id="sidebar-overlay" class="sidebar-overlay"></div>
+        
         <!-- Sidebar -->
         <aside id="sidebar" class="sidebar">
             <div class="sidebar-header">
                 <div class="logo">
-                    <div class="logo-icon" style="width: 36px; height: 36px; border-radius: 8px; background: var(--accent-gradient); display: flex; align-items: center; justify-content: center; margin-right: 12px;">
-                        <i class="fas fa-cube" style="font-size: 20px; color: white;"></i>
+                    <div class="logo-icon" style="background:none;box-shadow:none;padding:0;overflow:hidden;">
+                        <img src="Logo.jpeg" alt="AMDOX" style="width:100%;height:100%;object-fit:contain;border-radius:10px;">
                     </div>
                     <div class="logo-text">
                         <h1>Amdox</h1>
@@ -75,16 +85,16 @@
             <nav class="sidebar-nav" id="sidebar-nav">
                 <div class="nav-section">
                     <span class="nav-section-title">MAIN</span>
-                    <a href="#dashboard" class="nav-item active" data-page="dashboard" id="nav-dashboard">
+                    <a href="#dashboard" class="nav-item active" data-page="dashboard" id="nav-dashboard" data-roles="admin,hr,manager,employee">
                         <i class="fas fa-th-large"></i>
                         <span>Dashboard</span>
                         <span class="nav-badge pulse">Live</span>
                     </a>
-                    <a href="#analytics" class="nav-item" data-page="analytics" id="nav-analytics">
+                    <a href="#analytics" class="nav-item" data-page="analytics" id="nav-analytics" data-roles="admin,hr,manager">
                         <i class="fas fa-chart-line"></i>
                         <span>Analytics & BI</span>
                     </a>
-                    <a href="#ai-center" class="nav-item" data-page="ai-center" id="nav-ai-center">
+                    <a href="#ai-center" class="nav-item" data-page="ai-center" id="nav-ai-center" data-roles="admin">
                         <i class="fas fa-brain"></i>
                         <span>AI Command Center</span>
                         <span class="nav-badge new">AI</span>
@@ -93,23 +103,23 @@
 
                 <div class="nav-section">
                     <span class="nav-section-title">CORE MODULES</span>
-                    <a href="#hr" class="nav-item" data-page="hr" id="nav-hr">
+                    <a href="#hr" class="nav-item" data-page="hr" id="nav-hr" data-roles="admin,hr,manager">
                         <i class="fas fa-users"></i>
                         <span>HR Management</span>
                     </a>
-                    <a href="#finance" class="nav-item" data-page="finance" id="nav-finance">
-                        <i class="fas fa-file-invoice-dollar"></i>
+                    <a href="#finance" class="nav-item" data-page="finance" id="nav-finance" data-roles="admin">
+                        <i class="fas fa-coins"></i>
                         <span>Finance & Accounting</span>
                     </a>
-                    <a href="#inventory" class="nav-item" data-page="inventory" id="nav-inventory">
-                        <i class="fas fa-boxes-stacked"></i>
+                    <a href="#inventory" class="nav-item" data-page="inventory" id="nav-inventory" data-roles="admin">
+                        <i class="fas fa-warehouse"></i>
                         <span>Inventory & Supply</span>
                     </a>
-                    <a href="#crm" class="nav-item" data-page="crm" id="nav-crm">
+                    <a href="#crm" class="nav-item" data-page="crm" id="nav-crm" data-roles="admin,manager">
                         <i class="fas fa-handshake"></i>
                         <span>CRM</span>
                     </a>
-                    <a href="#projects" class="nav-item" data-page="projects" id="nav-projects">
+                    <a href="#projects" class="nav-item" data-page="projects" id="nav-projects" data-roles="admin,manager">
                         <i class="fas fa-diagram-project"></i>
                         <span>Project Management</span>
                     </a>
@@ -117,20 +127,20 @@
 
                 <div class="nav-section">
                     <span class="nav-section-title">OPERATIONS</span>
-                    <a href="#auth" class="nav-item" data-page="auth" id="nav-auth">
+                    <a href="#auth" class="nav-item" data-page="auth" id="nav-auth" data-roles="admin">
                         <i class="fas fa-shield-halved"></i>
                         <span>Auth & Security</span>
                     </a>
-                    <a href="#notifications" class="nav-item" data-page="notifications" id="nav-notifications">
+                    <a href="#notifications" class="nav-item" data-page="notifications" id="nav-notifications" data-roles="admin,hr,manager,employee">
                         <i class="fas fa-bell"></i>
                         <span>Notifications</span>
                         <span class="nav-count">5</span>
                     </a>
-                    <a href="#assets" class="nav-item" data-page="assets" id="nav-assets">
+                    <a href="#assets" class="nav-item" data-page="assets" id="nav-assets" data-roles="admin,manager">
                         <i class="fas fa-laptop"></i>
                         <span>Asset Management</span>
                     </a>
-                    <a href="#legal" class="nav-item" data-page="legal" id="nav-legal">
+                    <a href="#legal" class="nav-item" data-page="legal" id="nav-legal" data-roles="admin,hr">
                         <i class="fas fa-gavel"></i>
                         <span>Legal & Compliance</span>
                     </a>
@@ -138,19 +148,19 @@
 
                 <div class="nav-section">
                     <span class="nav-section-title">PLATFORM</span>
-                    <a href="#ecommerce" class="nav-item" data-page="ecommerce" id="nav-ecommerce">
+                    <a href="#ecommerce" class="nav-item" data-page="ecommerce" id="nav-ecommerce" data-roles="admin">
                         <i class="fas fa-cart-shopping"></i>
                         <span>E-Commerce</span>
                     </a>
-                    <a href="#communication" class="nav-item" data-page="communication" id="nav-communication">
+                    <a href="#communication" class="nav-item" data-page="communication" id="nav-communication" data-roles="admin,hr,manager,employee">
                         <i class="fas fa-comments"></i>
                         <span>Communication</span>
                     </a>
-                    <a href="#devops" class="nav-item" data-page="devops" id="nav-devops">
+                    <a href="#devops" class="nav-item" data-page="devops" id="nav-devops" data-roles="admin">
                         <i class="fas fa-server"></i>
                         <span>DevOps & Deploy</span>
                     </a>
-                    <a href="#settings" class="nav-item" data-page="settings" id="nav-settings">
+                    <a href="#settings" class="nav-item" data-page="settings" id="nav-settings" data-roles="admin,hr,manager,employee">
                         <i class="fas fa-gear"></i>
                         <span>Settings</span>
                     </a>
@@ -158,14 +168,14 @@
             </nav>
 
             <div class="sidebar-footer">
-                <div class="sidebar-user" onclick="window.logout()" style="cursor: pointer;" title="Click to Logout">
+                <div class="sidebar-user">
                     <div class="user-avatar">
                         <span>AK</span>
                         <span class="status-dot online"></span>
                     </div>
                     <div class="user-info">
                         <span class="user-name">Amit Kumar</span>
-                        <span class="user-role">Super Admin</span>
+                        <span class="user-role" id="sidebar-role-text">Admin</span>
                     </div>
                     <button class="user-menu-btn" id="user-menu-btn" aria-label="User menu">
                         <i class="fas fa-ellipsis-vertical"></i>
@@ -199,7 +209,7 @@
                         <button class="topbar-btn" id="theme-toggle" aria-label="Toggle theme">
                             <i class="fas fa-moon"></i>
                         </button>
-                        <button class="topbar-btn" id="fullscreen-btn" aria-label="Fullscreen">
+                        <button class="topbar-btn hide-xs" id="fullscreen-btn" aria-label="Fullscreen">
                             <i class="fas fa-expand"></i>
                         </button>
                         <button class="topbar-btn notification-btn" id="notification-btn" aria-label="Notifications">
@@ -360,1383 +370,23 @@
         </div>
     </div>
 
-    <!-- Quick Action Modal -->
-    <div id="quick-action-modal" class="quick-action-modal">
-        <div class="quick-action-backdrop"></div>
-        <div class="quick-action-content">
-            <div class="quick-action-header">
-                <div class="quick-action-title">
-                    <div class="quick-action-icon"><i class="fas fa-bolt"></i></div>
-                    <div>
-                        <h3>Quick Actions</h3>
-                        <span>Jump to any action across all modules</span>
-                    </div>
-                </div>
-                <button class="quick-action-close" id="quick-action-close" aria-label="Close"><i class="fas fa-xmark"></i></button>
-            </div>
-            <div class="quick-action-search">
-                <i class="fas fa-search"></i>
-                <input type="text" id="quick-action-search" placeholder="Search actions..." autocomplete="off">
-            </div>
-            <div class="quick-action-grid" id="quick-action-grid">
-                <div class="quick-action-category">
-                    <span class="quick-action-category-title">HR & People</span>
-                    <div class="quick-action-items">
-                        <div class="quick-action-item" data-action="hr" data-task="add-employee">
-                            <div class="qa-icon" style="background:rgba(99,102,241,0.12);color:#818cf8"><i class="fas fa-user-plus"></i></div>
-                            <div class="qa-text"><span class="qa-label">Add Employee</span><span class="qa-desc">Onboard new team member</span></div>
-                        </div>
-                        <div class="quick-action-item" data-action="hr" data-task="mark-attendance">
-                            <div class="qa-icon" style="background:rgba(34,197,94,0.12);color:#22c55e"><i class="fas fa-user-check"></i></div>
-                            <div class="qa-text"><span class="qa-label">Mark Attendance</span><span class="qa-desc">Record today's attendance</span></div>
-                        </div>
-                        <div class="quick-action-item" data-action="hr" data-task="leave-request">
-                            <div class="qa-icon" style="background:rgba(245,158,11,0.12);color:#f59e0b"><i class="fas fa-plane-departure"></i></div>
-                            <div class="qa-text"><span class="qa-label">Leave Request</span><span class="qa-desc">Apply or approve leave</span></div>
-                        </div>
-                        <div class="quick-action-item" data-action="hr" data-task="run-payroll">
-                            <div class="qa-icon" style="background:rgba(168,85,247,0.12);color:#a855f7"><i class="fas fa-money-check-dollar"></i></div>
-                            <div class="qa-text"><span class="qa-label">Run Payroll</span><span class="qa-desc">Process monthly salaries</span></div>
-                        </div>
-                    </div>
-                </div>
-                <div class="quick-action-category">
-                    <span class="quick-action-category-title">Finance</span>
-                    <div class="quick-action-items">
-                        <div class="quick-action-item" data-action="finance" data-task="new-invoice">
-                            <div class="qa-icon" style="background:rgba(34,197,94,0.12);color:#22c55e"><i class="fas fa-file-invoice-dollar"></i></div>
-                            <div class="qa-text"><span class="qa-label">Create Invoice</span><span class="qa-desc">Generate a new invoice</span></div>
-                        </div>
-                        <div class="quick-action-item" data-action="finance" data-task="record-expense">
-                            <div class="qa-icon" style="background:rgba(239,68,68,0.12);color:#ef4444"><i class="fas fa-receipt"></i></div>
-                            <div class="qa-text"><span class="qa-label">Record Expense</span><span class="qa-desc">Log a new expense</span></div>
-                        </div>
-                        <div class="quick-action-item" data-action="finance" data-task="tax-calc">
-                            <div class="qa-icon" style="background:rgba(6,182,212,0.12);color:#06b6d4"><i class="fas fa-calculator"></i></div>
-                            <div class="qa-text"><span class="qa-label">Tax Calculator</span><span class="qa-desc">Compute GST / income tax</span></div>
-                        </div>
-                    </div>
-                </div>
-                <div class="quick-action-category">
-                    <span class="quick-action-category-title">Sales & CRM</span>
-                    <div class="quick-action-items">
-                        <div class="quick-action-item" data-action="crm" data-task="new-lead">
-                            <div class="qa-icon" style="background:rgba(236,72,153,0.12);color:#ec4899"><i class="fas fa-user-plus"></i></div>
-                            <div class="qa-text"><span class="qa-label">New Lead</span><span class="qa-desc">Add a sales lead</span></div>
-                        </div>
-                        <div class="quick-action-item" data-action="crm" data-task="new-deal">
-                            <div class="qa-icon" style="background:rgba(99,102,241,0.12);color:#6366f1"><i class="fas fa-handshake"></i></div>
-                            <div class="qa-text"><span class="qa-label">Create Deal</span><span class="qa-desc">Start a new opportunity</span></div>
-                        </div>
-                        <div class="quick-action-item" data-action="crm" data-task="support-ticket">
-                            <div class="qa-icon" style="background:rgba(245,158,11,0.12);color:#f59e0b"><i class="fas fa-headset"></i></div>
-                            <div class="qa-text"><span class="qa-label">Support Ticket</span><span class="qa-desc">Create a customer ticket</span></div>
-                        </div>
-                    </div>
-                </div>
-                <div class="quick-action-category">
-                    <span class="quick-action-category-title">Projects & Tasks</span>
-                    <div class="quick-action-items">
-                        <div class="quick-action-item" data-action="projects" data-task="new-project">
-                            <div class="qa-icon" style="background:rgba(99,102,241,0.12);color:#818cf8"><i class="fas fa-folder-plus"></i></div>
-                            <div class="qa-text"><span class="qa-label">New Project</span><span class="qa-desc">Create a project</span></div>
-                        </div>
-                        <div class="quick-action-item" data-action="projects" data-task="new-task">
-                            <div class="qa-icon" style="background:rgba(34,197,94,0.12);color:#22c55e"><i class="fas fa-list-check"></i></div>
-                            <div class="qa-text"><span class="qa-label">Add Task</span><span class="qa-desc">Add task to current sprint</span></div>
-                        </div>
-                    </div>
-                </div>
-                <div class="quick-action-category">
-                    <span class="quick-action-category-title">Inventory & Assets</span>
-                    <div class="quick-action-items">
-                        <div class="quick-action-item" data-action="inventory" data-task="add-product">
-                            <div class="qa-icon" style="background:rgba(6,182,212,0.12);color:#06b6d4"><i class="fas fa-boxes-stacked"></i></div>
-                            <div class="qa-text"><span class="qa-label">Add Product</span><span class="qa-desc">Register new inventory item</span></div>
-                        </div>
-                        <div class="quick-action-item" data-action="inventory" data-task="new-po">
-                            <div class="qa-icon" style="background:rgba(168,85,247,0.12);color:#a855f7"><i class="fas fa-truck"></i></div>
-                            <div class="qa-text"><span class="qa-label">New Purchase Order</span><span class="qa-desc">Create a vendor PO</span></div>
-                        </div>
-                        <div class="quick-action-item" data-action="assets" data-task="add-asset">
-                            <div class="qa-icon" style="background:rgba(245,158,11,0.12);color:#f59e0b"><i class="fas fa-laptop-medical"></i></div>
-                            <div class="qa-text"><span class="qa-label">Register Asset</span><span class="qa-desc">Add a company asset</span></div>
-                        </div>
-                    </div>
-                </div>
-                <div class="quick-action-category">
-                    <span class="quick-action-category-title">Communication & Reports</span>
-                    <div class="quick-action-items">
-                        <div class="quick-action-item" data-action="communication" data-task="announcement">
-                            <div class="qa-icon" style="background:rgba(236,72,153,0.12);color:#ec4899"><i class="fas fa-bullhorn"></i></div>
-                            <div class="qa-text"><span class="qa-label">Post Announcement</span><span class="qa-desc">Company-wide notice</span></div>
-                        </div>
-                        <div class="quick-action-item" data-action="analytics" data-task="new-report">
-                            <div class="qa-icon" style="background:rgba(59,130,246,0.12);color:#3b82f6"><i class="fas fa-chart-bar"></i></div>
-                            <div class="qa-text"><span class="qa-label">Generate Report</span><span class="qa-desc">Create analytics report</span></div>
-                        </div>
-                        <div class="quick-action-item" data-action="legal" data-task="new-contract">
-                            <div class="qa-icon" style="background:rgba(245,158,11,0.12);color:#f59e0b"><i class="fas fa-file-contract"></i></div>
-                            <div class="qa-text"><span class="qa-label">New Contract</span><span class="qa-desc">Draft a legal contract</span></div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
+    <!-- Toast Container -->
+    <div id="toast-container" class="toast-container"></div>
 
-    <!-- Add Employee Modal -->
-    <div id="add-employee-modal" class="quick-action-modal">
-        <div class="quick-action-backdrop"></div>
-        <div class="quick-action-content" style="width: 500px;">
-            <div class="quick-action-header">
-                <div class="quick-action-title">
-                    <div class="quick-action-icon" style="background:linear-gradient(135deg,var(--accent),var(--purple));"><i class="fas fa-user-plus"></i></div>
-                    <div>
-                        <h3>Add Employee</h3>
-                        <span>Onboard a new team member</span>
-                    </div>
-                </div>
-                <button class="quick-action-close" id="add-employee-close" aria-label="Close"><i class="fas fa-xmark"></i></button>
-            </div>
-            <div style="padding: 24px;">
-                <form id="add-employee-form" style="display: flex; flex-direction: column; gap: 16px;">
-                    <div style="display: flex; gap: 16px;">
-                        <div style="flex: 1; display: flex; flex-direction: column; gap: 6px;">
-                            <label style="font-size: 12px; color: var(--text-muted); font-weight: 600;">Full Name</label>
-                            <input type="text" id="emp-name" required placeholder="e.g. John Doe" style="background: var(--bg-surface); border: 1px solid var(--border-color); padding: 10px 12px; border-radius: 8px; color: var(--text-primary); font-family: inherit; font-size: 14px; outline: none;">
-                        </div>
-                        <div style="flex: 1; display: flex; flex-direction: column; gap: 6px;">
-                            <label style="font-size: 12px; color: var(--text-muted); font-weight: 600;">Email Address</label>
-                            <input type="email" id="emp-email" required placeholder="john@amdox.com" style="background: var(--bg-surface); border: 1px solid var(--border-color); padding: 10px 12px; border-radius: 8px; color: var(--text-primary); font-family: inherit; font-size: 14px; outline: none;">
-                        </div>
-                    </div>
-                    <div style="display: flex; gap: 16px;">
-                        <div style="flex: 1; display: flex; flex-direction: column; gap: 6px;">
-                            <label style="font-size: 12px; color: var(--text-muted); font-weight: 600;">Department</label>
-                            <select id="emp-dept" required style="background: var(--bg-surface); border: 1px solid var(--border-color); padding: 10px 12px; border-radius: 8px; color: var(--text-primary); font-family: inherit; font-size: 14px; outline: none; appearance: none;">
-                                <option value="Engineering">Engineering</option>
-                                <option value="Sales & Marketing">Sales & Marketing</option>
-                                <option value="Finance">Finance</option>
-                                <option value="HR & Admin">HR & Admin</option>
-                                <option value="Operations">Operations</option>
-                            </select>
-                        </div>
-                        <div style="flex: 1; display: flex; flex-direction: column; gap: 6px;">
-                            <label style="font-size: 12px; color: var(--text-muted); font-weight: 600;">Role / Title</label>
-                            <input type="text" id="emp-role" required placeholder="e.g. Software Engineer" style="background: var(--bg-surface); border: 1px solid var(--border-color); padding: 10px 12px; border-radius: 8px; color: var(--text-primary); font-family: inherit; font-size: 14px; outline: none;">
-                        </div>
-                    </div>
-                    <div style="display: flex; gap: 16px;">
-                        <div style="flex: 1; display: flex; flex-direction: column; gap: 6px;">
-                            <label style="font-size: 12px; color: var(--text-muted); font-weight: 600;">Joining Date</label>
-                            <input type="text" id="emp-date" required placeholder="e.g. Jun 2026" style="background: var(--bg-surface); border: 1px solid var(--border-color); padding: 10px 12px; border-radius: 8px; color: var(--text-primary); font-family: inherit; font-size: 14px; outline: none;">
-                        </div>
-                        <div style="flex: 1; display: flex; flex-direction: column; gap: 6px;">
-                            <label style="font-size: 12px; color: var(--text-muted); font-weight: 600;">Salary (₹)</label>
-                            <input type="number" id="emp-salary" required placeholder="e.g. 120000" style="background: var(--bg-surface); border: 1px solid var(--border-color); padding: 10px 12px; border-radius: 8px; color: var(--text-primary); font-family: inherit; font-size: 14px; outline: none;">
-                        </div>
-                    </div>
-                    <div style="display: flex; justify-content: flex-end; gap: 12px; margin-top: 8px; padding-top: 16px; border-top: 1px solid var(--border-color);">
-                        <button type="button" class="btn btn-secondary" id="add-employee-cancel">Cancel</button>
-                        <button type="submit" class="btn btn-primary"><i class="fas fa-check"></i> Save Employee</button>
-                    </div>
-                </form>
-            </div>
-        </div>
-    </div>
-
-    <!-- Record Expense Modal -->
-    <div id="record-expense-modal" class="quick-action-modal">
-        <div class="quick-action-backdrop"></div>
-        <div class="quick-action-content" style="width: 500px;">
-            <div class="quick-action-header">
-                <div class="quick-action-title">
-                    <div class="quick-action-icon" style="background:linear-gradient(135deg,var(--danger),var(--purple));"><i class="fas fa-receipt"></i></div>
-                    <div>
-                        <h3>Record Expense</h3>
-                        <span>Log a new business expense</span>
-                    </div>
-                </div>
-                <button class="quick-action-close" id="record-expense-close" aria-label="Close"><i class="fas fa-xmark"></i></button>
-            </div>
-            <div style="padding: 24px;">
-                <form id="record-expense-form" style="display: flex; flex-direction: column; gap: 16px;">
-                    <div style="display: flex; flex-direction: column; gap: 6px;">
-                        <label style="font-size: 12px; color: var(--text-muted); font-weight: 600;">Description</label>
-                        <input type="text" id="exp-title" required placeholder="e.g. Office Supplies" style="background: var(--bg-surface); border: 1px solid var(--border-color); padding: 10px 12px; border-radius: 8px; color: var(--text-primary); font-family: inherit; font-size: 14px; outline: none;">
-                    </div>
-                    <div style="display: flex; gap: 16px;">
-                        <div style="flex: 1; display: flex; flex-direction: column; gap: 6px;">
-                            <label style="font-size: 12px; color: var(--text-muted); font-weight: 600;">Category</label>
-                            <select id="exp-category" required style="background: var(--bg-surface); border: 1px solid var(--border-color); padding: 10px 12px; border-radius: 8px; color: var(--text-primary); font-family: inherit; font-size: 14px; outline: none; appearance: none;">
-                                <option value="Travel">Travel</option>
-                                <option value="Office Supplies">Office Supplies</option>
-                                <option value="Utilities">Utilities</option>
-                                <option value="Marketing">Marketing</option>
-                                <option value="Rent">Rent</option>
-                                <option value="Software/SaaS">Software/SaaS</option>
-                                <option value="Other">Other</option>
-                            </select>
-                        </div>
-                        <div style="flex: 1; display: flex; flex-direction: column; gap: 6px;">
-                            <label style="font-size: 12px; color: var(--text-muted); font-weight: 600;">Amount (₹)</label>
-                            <input type="number" id="exp-amount" required placeholder="0.00" min="1" style="background: var(--bg-surface); border: 1px solid var(--border-color); padding: 10px 12px; border-radius: 8px; color: var(--text-primary); font-family: inherit; font-size: 14px; outline: none;">
-                        </div>
-                    </div>
-                    <div style="display: flex; gap: 16px;">
-                        <div style="flex: 1; display: flex; flex-direction: column; gap: 6px;">
-                            <label style="font-size: 12px; color: var(--text-muted); font-weight: 600;">Date</label>
-                            <input type="date" id="exp-date" required style="background: var(--bg-surface); border: 1px solid var(--border-color); padding: 10px 12px; border-radius: 8px; color: var(--text-primary); font-family: inherit; font-size: 14px; outline: none;">
-                        </div>
-                        <div style="flex: 1; display: flex; flex-direction: column; gap: 6px;">
-                            <label style="font-size: 12px; color: var(--text-muted); font-weight: 600;">Payment Method</label>
-                            <select id="exp-method" required style="background: var(--bg-surface); border: 1px solid var(--border-color); padding: 10px 12px; border-radius: 8px; color: var(--text-primary); font-family: inherit; font-size: 14px; outline: none; appearance: none;">
-                                <option value="Company Card">Company Card</option>
-                                <option value="Bank Transfer">Bank Transfer</option>
-                                <option value="Cash">Cash</option>
-                                <option value="Reimbursement">Reimbursement</option>
-                            </select>
-                        </div>
-                    </div>
-                    <div style="display: flex; flex-direction: column; gap: 6px;">
-                        <label style="font-size: 12px; color: var(--text-muted); font-weight: 600;">Reference / Receipt # (Optional)</label>
-                        <input type="text" id="exp-ref" placeholder="e.g. REC-12345" style="background: var(--bg-surface); border: 1px solid var(--border-color); padding: 10px 12px; border-radius: 8px; color: var(--text-primary); font-family: inherit; font-size: 14px; outline: none;">
-                    </div>
-                    <div style="display: flex; justify-content: flex-end; gap: 12px; margin-top: 8px; padding-top: 16px; border-top: 1px solid var(--border-color);">
-                        <button type="button" class="btn btn-secondary" id="record-expense-cancel">Cancel</button>
-                        <button type="submit" class="btn btn-primary"><i class="fas fa-check"></i> Record Expense</button>
-                    </div>
-                </form>
-            </div>
-        </div>
-    </div>
-
-
-    <!-- Tax Calculator Modal -->
-    <div id="tax-calculator-modal" class="quick-action-modal">
-        <div class="quick-action-backdrop"></div>
-        <div class="quick-action-content" style="width: 480px;">
-            <div class="quick-action-header">
-                <div class="quick-action-title">
-                    <div class="quick-action-icon" style="background:linear-gradient(135deg,var(--cyan),var(--accent));"><i class="fas fa-calculator"></i></div>
-                    <div>
-                        <h3>Tax Calculator</h3>
-                        <span>Compute GST and custom tax rates</span>
-                    </div>
-                </div>
-                <button class="quick-action-close" id="tax-calc-close" aria-label="Close"><i class="fas fa-xmark"></i></button>
-            </div>
-            <div style="padding: 24px;">
-                <div id="tax-calc-form" style="display: flex; flex-direction: column; gap: 20px;">
-                    <div style="display: flex; flex-direction: column; gap: 6px;">
-                        <label style="font-size: 12px; color: var(--text-muted); font-weight: 600;">Base Amount (₹)</label>
-                        <input type="number" id="tax-base-amount" placeholder="e.g. 100000" style="background: var(--bg-surface); border: 1px solid var(--border-color); padding: 12px; border-radius: 8px; color: var(--text-primary); font-family: var(--font-mono); font-size: 16px; outline: none;">
-                    </div>
-                    
-                    <div style="display: flex; gap: 16px;">
-                        <div style="flex: 1; display: flex; flex-direction: column; gap: 6px;">
-                            <label style="font-size: 12px; color: var(--text-muted); font-weight: 600;">Tax Type</label>
-                            <select id="tax-type" style="background: var(--bg-surface); border: 1px solid var(--border-color); padding: 10px 12px; border-radius: 8px; color: var(--text-primary); font-family: inherit; font-size: 14px; outline: none; appearance: none;">
-                                <option value="GST">GST (Goods & Services Tax)</option>
-                                <option value="VAT">VAT</option>
-                                <option value="Service Tax">Service Tax</option>
-                            </select>
-                        </div>
-                        <div style="flex: 1; display: flex; flex-direction: column; gap: 6px;">
-                            <label style="font-size: 12px; color: var(--text-muted); font-weight: 600;">Tax Rate (%)</label>
-                            <select id="tax-rate" style="background: var(--bg-surface); border: 1px solid var(--border-color); padding: 10px 12px; border-radius: 8px; color: var(--text-primary); font-family: inherit; font-size: 14px; outline: none; appearance: none;">
-                                <option value="5">5% (Essential)</option>
-                                <option value="12">12% (Standard)</option>
-                                <option value="18" selected>18% (Standard+)</option>
-                                <option value="28">28% (Luxury)</option>
-                                <option value="custom">Custom...</option>
-                            </select>
-                        </div>
-                    </div>
-
-                    <div id="custom-rate-container" style="display: none; flex-direction: column; gap: 6px;">
-                        <label style="font-size: 12px; color: var(--text-muted); font-weight: 600;">Custom Rate (%)</label>
-                        <input type="number" id="tax-custom-rate" placeholder="e.g. 15" style="background: var(--bg-surface); border: 1px solid var(--border-color); padding: 10px 12px; border-radius: 8px; color: var(--text-primary); font-family: inherit; font-size: 14px; outline: none;">
-                    </div>
-
-                    <div style="background: rgba(99, 102, 241, 0.08); border: 1px dashed var(--accent); border-radius: 12px; padding: 20px; display: flex; flex-direction: column; gap: 12px;">
-                        <div style="display: flex; justify-content: space-between; align-items: center;">
-                            <span style="font-size: 13px; color: var(--text-muted);">Tax Amount</span>
-                            <span id="tax-result-amount" style="font-size: 18px; font-weight: 700; color: var(--accent-light);">₹0.00</span>
-                        </div>
-                        <div style="height: 1px; background: var(--border-color);"></div>
-                        <div style="display: flex; justify-content: space-between; align-items: center;">
-                            <span style="font-size: 14px; font-weight: 600;">Total Amount</span>
-                            <span id="tax-result-total" style="font-size: 22px; font-weight: 800; color: var(--text-primary);">₹0.00</span>
-                        </div>
-                    </div>
-
-                    <div style="display: flex; justify-content: flex-end; gap: 12px; margin-top: 4px;">
-                        <button type="button" class="btn btn-secondary" id="tax-calc-copy"><i class="fas fa-copy"></i> Copy Result</button>
-                        <button type="button" class="btn btn-primary" id="tax-calc-done">Done</button>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- New Invoice Modal -->
-    <div id="new-invoice-modal" class="quick-action-modal">
-        <div class="quick-action-backdrop"></div>
-        <div class="quick-action-content" style="width: 520px;">
-            <div class="quick-action-header">
-                <div class="quick-action-title">
-                    <div class="quick-action-icon" style="background:linear-gradient(135deg,var(--success),var(--info));"><i class="fas fa-file-invoice-dollar"></i></div>
-                    <div>
-                        <h3>Create Invoice</h3>
-                        <span>Generate a new invoice</span>
-                    </div>
-                </div>
-                <button class="quick-action-close" id="new-invoice-close" aria-label="Close"><i class="fas fa-xmark"></i></button>
-            </div>
-            <div style="padding: 24px;">
-                <form id="new-invoice-form" style="display: flex; flex-direction: column; gap: 16px;">
-                    <div style="display: flex; gap: 16px;">
-                        <div style="flex: 1; display: flex; flex-direction: column; gap: 6px;">
-                            <label style="font-size: 12px; color: var(--text-muted); font-weight: 600;">Invoice Number</label>
-                            <input type="text" id="inv-number" readonly style="background: var(--bg-surface); border: 1px solid var(--border-color); padding: 10px 12px; border-radius: 8px; color: var(--text-muted); font-family: var(--font-mono); font-size: 14px; outline: none;">
-                        </div>
-                        <div style="flex: 1; display: flex; flex-direction: column; gap: 6px;">
-                            <label style="font-size: 12px; color: var(--text-muted); font-weight: 600;">Due Date</label>
-                            <input type="date" id="inv-due-date" required style="background: var(--bg-surface); border: 1px solid var(--border-color); padding: 10px 12px; border-radius: 8px; color: var(--text-primary); font-family: inherit; font-size: 14px; outline: none;">
-                        </div>
-                    </div>
-                    <div style="display: flex; flex-direction: column; gap: 6px;">
-                        <label style="font-size: 12px; color: var(--text-muted); font-weight: 600;">Client Name</label>
-                        <input type="text" id="inv-client" required placeholder="e.g. Infosys Ltd" style="background: var(--bg-surface); border: 1px solid var(--border-color); padding: 10px 12px; border-radius: 8px; color: var(--text-primary); font-family: inherit; font-size: 14px; outline: none;">
-                    </div>
-                    <div style="display: flex; gap: 16px;">
-                        <div style="flex: 1; display: flex; flex-direction: column; gap: 6px;">
-                            <label style="font-size: 12px; color: var(--text-muted); font-weight: 600;">Amount (₹)</label>
-                            <input type="number" id="inv-amount" required placeholder="0.00" min="1" style="background: var(--bg-surface); border: 1px solid var(--border-color); padding: 10px 12px; border-radius: 8px; color: var(--text-primary); font-family: inherit; font-size: 14px; outline: none;">
-                        </div>
-                        <div style="flex: 1; display: flex; flex-direction: column; gap: 6px;">
-                            <label style="font-size: 12px; color: var(--text-muted); font-weight: 600;">Status</label>
-                            <select id="inv-status" required style="background: var(--bg-surface); border: 1px solid var(--border-color); padding: 10px 12px; border-radius: 8px; color: var(--text-primary); font-family: inherit; font-size: 14px; outline: none; appearance: none;">
-                                <option value="Pending">Pending</option>
-                                <option value="Sent">Sent</option>
-                                <option value="Paid">Paid</option>
-                            </select>
-                        </div>
-                    </div>
-                    <div style="display: flex; flex-direction: column; gap: 6px;">
-                        <label style="font-size: 12px; color: var(--text-muted); font-weight: 600;">Description (Optional)</label>
-                        <input type="text" id="inv-description" placeholder="e.g. Consulting Services" style="background: var(--bg-surface); border: 1px solid var(--border-color); padding: 10px 12px; border-radius: 8px; color: var(--text-primary); font-family: inherit; font-size: 14px; outline: none;">
-                    </div>
-                    <div style="display: flex; justify-content: flex-end; gap: 12px; margin-top: 8px; padding-top: 16px; border-top: 1px solid var(--border-color);">
-                        <button type="button" class="btn btn-secondary" id="new-invoice-cancel">Cancel</button>
-                        <button type="submit" class="btn btn-primary"><i class="fas fa-check"></i> Create Invoice</button>
-                    </div>
-                </form>
-            </div>
-        </div>
-    </div>
-
-    <!-- View Invoice Modal -->
-    <div id="view-invoice-modal" class="quick-action-modal">
-        <div class="quick-action-backdrop"></div>
-        <div class="quick-action-content" style="width: 520px;">
-            <div class="quick-action-header">
-                <div class="quick-action-title">
-                    <div class="quick-action-icon" style="background:linear-gradient(135deg,#3b82f6,#2dd4bf);"><i class="fas fa-file-invoice"></i></div>
-                    <div>
-                        <h3 id="view-inv-no">Invoice Detail</h3>
-                        <span id="view-inv-client">Client details</span>
-                    </div>
-                </div>
-                <button class="quick-action-close" id="view-inv-close" aria-label="Close"><i class="fas fa-xmark"></i></button>
-            </div>
-            <div style="padding: 24px;">
-                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 24px;">
-                    <div>
-                        <div style="font-size: 11px; color: var(--text-muted); font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 4px;">Status</div>
-                        <div id="view-inv-status"><span class="badge">N/A</span></div>
-                    </div>
-                    <div>
-                        <div style="font-size: 11px; color: var(--text-muted); font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 4px;">Due Date</div>
-                        <div id="view-inv-date" style="font-weight: 600;">N/A</div>
-                    </div>
-                    <div>
-                        <div style="font-size: 11px; color: var(--text-muted); font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 4px;">Total Amount</div>
-                        <div id="view-inv-amount" style="font-size: 20px; font-weight: 800; color: var(--accent-light);">₹0</div>
-                    </div>
-                    <div>
-                        <div style="font-size: 11px; color: var(--text-muted); font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 4px;">Reference</div>
-                        <div style="font-weight: 600; color: var(--text-primary);">TXN-REF-882</div>
-                    </div>
-                </div>
-
-                <div style="border-top: 1px solid var(--border-color); padding-top: 20px;">
-                    <div style="font-size: 11px; color: var(--text-muted); font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 12px;">Invoice Items</div>
-                    <div style="display: flex; flex-direction: column; gap: 10px;">
-                        <div style="display: flex; justify-content: space-between; font-size: 13px;">
-                            <span style="color: var(--text-primary);">Consulting Services (Professional Fee)</span>
-                            <span style="font-weight: 600;">₹50,000.00</span>
-                        </div>
-                        <div style="display: flex; justify-content: space-between; font-size: 13px;">
-                            <span style="color: var(--text-primary);">Cloud Infrastructure Setup</span>
-                            <span style="font-weight: 600;">₹2,00,000.00</span>
-                        </div>
-                    </div>
-                </div>
-
-                <div style="margin-top: 32px; display: flex; justify-content: flex-end; gap: 12px;">
-                    <button type="button" class="btn btn-secondary" id="view-inv-print"><i class="fas fa-print"></i> Print</button>
-                    <button type="button" class="btn btn-primary" id="view-inv-done">Close</button>
-                </div>
-            </div>
-        </div>
-    </div>
-
-
-    <!-- Add Product Modal -->
-    <div id="add-product-modal" class="quick-action-modal">
-        <div class="quick-action-backdrop"></div>
-        <div class="quick-action-content" style="width: 520px;">
-            <div class="quick-action-header">
-                <div class="quick-action-title">
-                    <div class="quick-action-icon" style="background:linear-gradient(135deg,var(--cyan),var(--accent));"><i class="fas fa-boxes-stacked"></i></div>
-                    <div>
-                        <h3>Add Product</h3>
-                        <span>Register a new inventory item</span>
-                    </div>
-                </div>
-                <button class="quick-action-close" id="add-product-close" aria-label="Close"><i class="fas fa-xmark"></i></button>
-            </div>
-            <div style="padding: 24px;">
-                <form id="add-product-form" style="display: flex; flex-direction: column; gap: 16px;">
-                    <div style="display: flex; gap: 16px;">
-                        <div style="flex: 1; display: flex; flex-direction: column; gap: 6px;">
-                            <label style="font-size: 12px; color: var(--text-muted); font-weight: 600;">Product Name</label>
-                            <input type="text" id="prod-name" required placeholder="e.g. MacBook Pro 16&quot;" style="background: var(--bg-surface); border: 1px solid var(--border-color); padding: 10px 12px; border-radius: 8px; color: var(--text-primary); font-family: inherit; font-size: 14px; outline: none;">
-                        </div>
-                        <div style="flex: 1; display: flex; flex-direction: column; gap: 6px;">
-                            <label style="font-size: 12px; color: var(--text-muted); font-weight: 600;">SKU</label>
-                            <input type="text" id="prod-sku" required placeholder="Auto-generated" readonly style="background: var(--bg-surface); border: 1px solid var(--border-color); padding: 10px 12px; border-radius: 8px; color: var(--text-muted); font-family: var(--font-mono); font-size: 14px; outline: none;">
-                        </div>
-                    </div>
-                    <div style="display: flex; gap: 16px;">
-                        <div style="flex: 1; display: flex; flex-direction: column; gap: 6px;">
-                            <label style="font-size: 12px; color: var(--text-muted); font-weight: 600;">Category</label>
-                            <select id="prod-category" required style="background: var(--bg-surface); border: 1px solid var(--border-color); padding: 10px 12px; border-radius: 8px; color: var(--text-primary); font-family: inherit; font-size: 14px; outline: none; appearance: none;">
-                                <option value="Electronics">Electronics</option>
-                                <option value="Furniture">Furniture</option>
-                                <option value="Supplies">Supplies</option>
-                                <option value="Software">Software</option>
-                                <option value="Hardware">Hardware</option>
-                                <option value="Services">Services</option>
-                            </select>
-                        </div>
-                        <div style="flex: 1; display: flex; flex-direction: column; gap: 6px;">
-                            <label style="font-size: 12px; color: var(--text-muted); font-weight: 600;">Stock Quantity</label>
-                            <input type="number" id="prod-stock" required placeholder="e.g. 100" min="0" style="background: var(--bg-surface); border: 1px solid var(--border-color); padding: 10px 12px; border-radius: 8px; color: var(--text-primary); font-family: inherit; font-size: 14px; outline: none;">
-                        </div>
-                    </div>
-                    <div style="display: flex; gap: 16px;">
-                        <div style="flex: 1; display: flex; flex-direction: column; gap: 6px;">
-                            <label style="font-size: 12px; color: var(--text-muted); font-weight: 600;">Warehouse</label>
-                            <select id="prod-warehouse" required style="background: var(--bg-surface); border: 1px solid var(--border-color); padding: 10px 12px; border-radius: 8px; color: var(--text-primary); font-family: inherit; font-size: 14px; outline: none; appearance: none;">
-                                <option value="Warehouse A">Warehouse A</option>
-                                <option value="Warehouse B">Warehouse B</option>
-                                <option value="Warehouse C">Warehouse C</option>
-                            </select>
-                        </div>
-                        <div style="flex: 1; display: flex; flex-direction: column; gap: 6px;">
-                            <label style="font-size: 12px; color: var(--text-muted); font-weight: 600;">Unit Price (₹)</label>
-                            <input type="number" id="prod-price" required placeholder="e.g. 85000" min="1" style="background: var(--bg-surface); border: 1px solid var(--border-color); padding: 10px 12px; border-radius: 8px; color: var(--text-primary); font-family: inherit; font-size: 14px; outline: none;">
-                        </div>
-                    </div>
-                    <div style="display: flex; justify-content: flex-end; gap: 12px; margin-top: 8px; padding-top: 16px; border-top: 1px solid var(--border-color);">
-                        <button type="button" class="btn btn-secondary" id="add-product-cancel">Cancel</button>
-                        <button type="submit" class="btn btn-primary"><i class="fas fa-check"></i> Add Product</button>
-                    </div>
-                </form>
-            </div>
-        </div>
-    </div>
-
-    <!-- New Purchase Order Modal -->
-    <div id="new-po-modal" class="quick-action-modal">
-        <div class="quick-action-backdrop"></div>
-        <div class="quick-action-content" style="width: 540px;">
-            <div class="quick-action-header">
-                <div class="quick-action-title">
-                    <div class="quick-action-icon" style="background:linear-gradient(135deg,var(--purple),var(--accent));"><i class="fas fa-truck"></i></div>
-                    <div>
-                        <h3>New Purchase Order</h3>
-                        <span>Create a vendor purchase order</span>
-                    </div>
-                </div>
-                <button class="quick-action-close" id="new-po-close" aria-label="Close"><i class="fas fa-xmark"></i></button>
-            </div>
-            <div style="padding: 24px;">
-                <form id="new-po-form" style="display: flex; flex-direction: column; gap: 16px;">
-                    <div style="display: flex; gap: 16px;">
-                        <div style="flex: 1; display: flex; flex-direction: column; gap: 6px;">
-                            <label style="font-size: 12px; color: var(--text-muted); font-weight: 600;">PO Number</label>
-                            <input type="text" id="po-number" readonly style="background: var(--bg-surface); border: 1px solid var(--border-color); padding: 10px 12px; border-radius: 8px; color: var(--text-muted); font-family: var(--font-mono); font-size: 14px; outline: none;">
-                        </div>
-                        <div style="flex: 1; display: flex; flex-direction: column; gap: 6px;">
-                            <label style="font-size: 12px; color: var(--text-muted); font-weight: 600;">Vendor / Supplier</label>
-                            <select id="po-vendor" required style="background: var(--bg-surface); border: 1px solid var(--border-color); padding: 10px 12px; border-radius: 8px; color: var(--text-primary); font-family: inherit; font-size: 14px; outline: none; appearance: none;">
-                                <option value="">Select vendor...</option>
-                                <option value="TechSupply Co">TechSupply Co</option>
-                                <option value="OfficeMart India">OfficeMart India</option>
-                                <option value="CloudHost Services">CloudHost Services</option>
-                                <option value="Acme Electronics">Acme Electronics</option>
-                                <option value="FurniPro India">FurniPro India</option>
-                                <option value="PrintWorld">PrintWorld</option>
-                            </select>
-                        </div>
-                    </div>
-                    <div style="display: flex; flex-direction: column; gap: 6px;">
-                        <label style="font-size: 12px; color: var(--text-muted); font-weight: 600;">Items Description</label>
-                        <input type="text" id="po-items" required placeholder="e.g. 50x USB-C Cables, 20x Keyboards" style="background: var(--bg-surface); border: 1px solid var(--border-color); padding: 10px 12px; border-radius: 8px; color: var(--text-primary); font-family: inherit; font-size: 14px; outline: none;">
-                    </div>
-                    <div style="display: flex; gap: 16px;">
-                        <div style="flex: 1; display: flex; flex-direction: column; gap: 6px;">
-                            <label style="font-size: 12px; color: var(--text-muted); font-weight: 600;">Total Amount (₹)</label>
-                            <input type="number" id="po-amount" required placeholder="e.g. 185000" min="1" style="background: var(--bg-surface); border: 1px solid var(--border-color); padding: 10px 12px; border-radius: 8px; color: var(--text-primary); font-family: inherit; font-size: 14px; outline: none;">
-                        </div>
-                        <div style="flex: 1; display: flex; flex-direction: column; gap: 6px;">
-                            <label style="font-size: 12px; color: var(--text-muted); font-weight: 600;">Expected Delivery</label>
-                            <input type="date" id="po-delivery-date" required style="background: var(--bg-surface); border: 1px solid var(--border-color); padding: 10px 12px; border-radius: 8px; color: var(--text-primary); font-family: inherit; font-size: 14px; outline: none;">
-                        </div>
-                    </div>
-                    <div style="display: flex; gap: 16px;">
-                        <div style="flex: 1; display: flex; flex-direction: column; gap: 6px;">
-                            <label style="font-size: 12px; color: var(--text-muted); font-weight: 600;">Priority</label>
-                            <select id="po-priority" required style="background: var(--bg-surface); border: 1px solid var(--border-color); padding: 10px 12px; border-radius: 8px; color: var(--text-primary); font-family: inherit; font-size: 14px; outline: none; appearance: none;">
-                                <option value="Normal">Normal</option>
-                                <option value="High">High</option>
-                                <option value="Urgent">Urgent</option>
-                            </select>
-                        </div>
-                        <div style="flex: 1; display: flex; flex-direction: column; gap: 6px;">
-                            <label style="font-size: 12px; color: var(--text-muted); font-weight: 600;">Warehouse Destination</label>
-                            <select id="po-warehouse" required style="background: var(--bg-surface); border: 1px solid var(--border-color); padding: 10px 12px; border-radius: 8px; color: var(--text-primary); font-family: inherit; font-size: 14px; outline: none; appearance: none;">
-                                <option value="Warehouse A">Warehouse A</option>
-                                <option value="Warehouse B">Warehouse B</option>
-                                <option value="Warehouse C">Warehouse C</option>
-                            </select>
-                        </div>
-                    </div>
-                    <div style="display: flex; justify-content: flex-end; gap: 12px; margin-top: 8px; padding-top: 16px; border-top: 1px solid var(--border-color);">
-                        <button type="button" class="btn btn-secondary" id="new-po-cancel">Cancel</button>
-                        <button type="submit" class="btn btn-primary"><i class="fas fa-paper-plane"></i> Create PO</button>
-                    </div>
-                </form>
-            </div>
-        </div>
-    </div>
-
-    <!-- Barcode Scanner Modal -->
-    <div id="scan-inventory-modal" class="quick-action-modal">
-        <div class="quick-action-backdrop"></div>
-        <div class="quick-action-content" style="width: 480px;">
-            <div class="quick-action-header">
-                <div class="quick-action-title">
-                    <div class="quick-action-icon" style="background:linear-gradient(135deg,var(--success),var(--cyan));"><i class="fas fa-barcode"></i></div>
-                    <div>
-                        <h3>Barcode / RFID Scanner</h3>
-                        <span>Scan or enter barcode to lookup product</span>
-                    </div>
-                </div>
-                <button class="quick-action-close" id="scan-inv-close" aria-label="Close"><i class="fas fa-xmark"></i></button>
-            </div>
-            <div style="padding: 24px;">
-                <div id="scan-form" style="display: flex; flex-direction: column; gap: 20px;">
-                    <!-- Scan Mode Toggle -->
-                    <div style="display: flex; gap: 8px;">
-                        <button type="button" class="btn btn-primary btn-sm scan-mode-btn active" data-mode="manual" style="flex:1"><i class="fas fa-keyboard"></i> Manual Entry</button>
-                        <button type="button" class="btn btn-secondary btn-sm scan-mode-btn" data-mode="camera" style="flex:1"><i class="fas fa-camera"></i> Camera Scan</button>
-                    </div>
-
-                    <!-- Manual Entry -->
-                    <div id="scan-manual-mode">
-                        <div style="display: flex; flex-direction: column; gap: 6px;">
-                            <label style="font-size: 12px; color: var(--text-muted); font-weight: 600;">Enter SKU or Barcode</label>
-                            <div style="display: flex; gap: 8px;">
-                                <input type="text" id="scan-barcode-input" placeholder="e.g. SKU-0012 or scan barcode..." style="flex:1; background: var(--bg-surface); border: 1px solid var(--border-color); padding: 12px; border-radius: 8px; color: var(--text-primary); font-family: var(--font-mono); font-size: 16px; outline: none; letter-spacing: 1px;">
-                                <button type="button" class="btn btn-primary" id="scan-lookup-btn"><i class="fas fa-search"></i></button>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Camera Scan (simulated) -->
-                    <div id="scan-camera-mode" style="display: none;">
-                        <div style="background: rgba(0,0,0,0.3); border-radius: 12px; height: 200px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 12px; border: 2px dashed var(--border-color); position: relative; overflow: hidden;">
-                            <div id="scan-camera-line" style="position: absolute; top: 0; left: 10%; width: 80%; height: 2px; background: var(--success); box-shadow: 0 0 10px var(--success); animation: scanLine 2s ease-in-out infinite;"></div>
-                            <i class="fas fa-qrcode" style="font-size: 36px; color: var(--text-muted); opacity: 0.5;"></i>
-                            <span style="font-size: 13px; color: var(--text-muted);">Point camera at barcode/QR code</span>
-                            <button type="button" class="btn btn-primary btn-sm" id="scan-simulate-btn"><i class="fas fa-bolt"></i> Simulate Scan</button>
-                        </div>
-                    </div>
-
-                    <!-- Scan Result -->
-                    <div id="scan-result" style="display: none;">
-                        <div style="background: rgba(34,197,94,0.08); border: 1px solid rgba(34,197,94,0.3); border-radius: 12px; padding: 20px;">
-                            <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 16px;">
-                                <div style="width: 36px; height: 36px; border-radius: 10px; background: rgba(34,197,94,0.15); display: flex; align-items: center; justify-content: center; color: var(--success);"><i class="fas fa-check-circle"></i></div>
-                                <div>
-                                    <div style="font-weight: 700; color: var(--success);">Product Found</div>
-                                    <div style="font-size: 12px; color: var(--text-muted);" id="scan-result-sku"></div>
-                                </div>
-                            </div>
-                            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
-                                <div>
-                                    <div style="font-size: 11px; color: var(--text-muted); font-weight: 600; text-transform: uppercase;">Product</div>
-                                    <div style="font-weight: 600;" id="scan-result-name"></div>
-                                </div>
-                                <div>
-                                    <div style="font-size: 11px; color: var(--text-muted); font-weight: 600; text-transform: uppercase;">Category</div>
-                                    <div style="font-weight: 600;" id="scan-result-category"></div>
-                                </div>
-                                <div>
-                                    <div style="font-size: 11px; color: var(--text-muted); font-weight: 600; text-transform: uppercase;">Stock</div>
-                                    <div style="font-weight: 700;" id="scan-result-stock"></div>
-                                </div>
-                                <div>
-                                    <div style="font-size: 11px; color: var(--text-muted); font-weight: 600; text-transform: uppercase;">Warehouse</div>
-                                    <div style="font-weight: 600;" id="scan-result-warehouse"></div>
-                                </div>
-                                <div>
-                                    <div style="font-size: 11px; color: var(--text-muted); font-weight: 600; text-transform: uppercase;">Status</div>
-                                    <div id="scan-result-status"></div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Not Found Result -->
-                    <div id="scan-not-found" style="display: none;">
-                        <div style="background: rgba(239,68,68,0.08); border: 1px solid rgba(239,68,68,0.3); border-radius: 12px; padding: 20px; text-align: center;">
-                            <i class="fas fa-circle-xmark" style="font-size: 28px; color: var(--danger); margin-bottom: 8px;"></i>
-                            <div style="font-weight: 700; color: var(--danger); margin-bottom: 4px;">Product Not Found</div>
-                            <div style="font-size: 13px; color: var(--text-muted);">No product matches the scanned code. Try again or add a new product.</div>
-                        </div>
-                    </div>
-
-                    <div style="display: flex; justify-content: flex-end; gap: 12px; margin-top: 4px;">
-                        <button type="button" class="btn btn-secondary" id="scan-clear-btn"><i class="fas fa-rotate-left"></i> Clear</button>
-                        <button type="button" class="btn btn-primary" id="scan-done-btn">Done</button>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Add Lead Modal -->
-    <div id="add-lead-modal" class="quick-action-modal">
-        <div class="quick-action-backdrop"></div>
-        <div class="quick-action-content" style="width: 500px;">
-            <div class="quick-action-header">
-                <div class="quick-action-title">
-                    <div class="quick-action-icon" style="background:linear-gradient(135deg,var(--pink),var(--purple));"><i class="fas fa-user-plus"></i></div>
-                    <div>
-                        <h3>Add New Lead</h3>
-                        <span>Register a new sales opportunity</span>
-                    </div>
-                </div>
-                <button class="quick-action-close" id="add-lead-close" aria-label="Close"><i class="fas fa-xmark"></i></button>
-            </div>
-            <div style="padding: 24px;">
-                <form id="add-lead-form" style="display: flex; flex-direction: column; gap: 16px;">
-                    <div style="display: flex; flex-direction: column; gap: 6px;">
-                        <label style="font-size: 12px; color: var(--text-muted); font-weight: 600;">Company / Organization</label>
-                        <input type="text" id="lead-company" required placeholder="e.g. Acme Corp" style="background: var(--bg-surface); border: 1px solid var(--border-color); padding: 10px 12px; border-radius: 8px; color: var(--text-primary); font-family: inherit; font-size: 14px; outline: none;">
-                    </div>
-                    <div style="display: flex; gap: 16px;">
-                        <div style="flex: 1; display: flex; flex-direction: column; gap: 6px;">
-                            <label style="font-size: 12px; color: var(--text-muted); font-weight: 600;">Contact Person</label>
-                            <input type="text" id="lead-contact" required placeholder="John Smith" style="background: var(--bg-surface); border: 1px solid var(--border-color); padding: 10px 12px; border-radius: 8px; color: var(--text-primary); font-family: inherit; font-size: 14px; outline: none;">
-                        </div>
-                        <div style="flex: 1; display: flex; flex-direction: column; gap: 6px;">
-                            <label style="font-size: 12px; color: var(--text-muted); font-weight: 600;">Lead Type</label>
-                            <select id="lead-type" required style="background: var(--bg-surface); border: 1px solid var(--border-color); padding: 10px 12px; border-radius: 8px; color: var(--text-primary); font-family: inherit; font-size: 14px; outline: none; appearance: none;">
-                                <option value="Inbound">Inbound</option>
-                                <option value="Outbound">Outbound</option>
-                                <option value="Referral">Referral</option>
-                                <option value="Partner">Partner</option>
-                            </select>
-                        </div>
-                    </div>
-                    <div style="display: flex; gap: 16px;">
-                        <div style="flex: 1; display: flex; flex-direction: column; gap: 6px;">
-                            <label style="font-size: 12px; color: var(--text-muted); font-weight: 600;">Estimated Value (₹)</label>
-                            <input type="number" id="lead-value" required placeholder="50000" style="background: var(--bg-surface); border: 1px solid var(--border-color); padding: 10px 12px; border-radius: 8px; color: var(--text-primary); font-family: inherit; font-size: 14px; outline: none;">
-                        </div>
-                        <div style="flex: 1; display: flex; flex-direction: column; gap: 6px;">
-                            <label style="font-size: 12px; color: var(--text-muted); font-weight: 600;">Initial Stage</label>
-                            <select id="lead-stage" required style="background: var(--bg-surface); border: 1px solid var(--border-color); padding: 10px 12px; border-radius: 8px; color: var(--text-primary); font-family: inherit; font-size: 14px; outline: none; appearance: none;">
-                                <option value="New">New</option>
-                                <option value="Qualified">Qualified</option>
-                                <option value="Proposal">Proposal</option>
-                                <option value="Negotiation">Negotiation</option>
-                            </select>
-                        </div>
-                    </div>
-                    <div style="display: flex; justify-content: flex-end; gap: 12px; margin-top: 8px; padding-top: 16px; border-top: 1px solid var(--border-color);">
-                        <button type="button" class="btn btn-secondary" id="add-lead-cancel">Cancel</button>
-                        <button type="submit" class="btn btn-primary"><i class="fas fa-check"></i> Save Lead</button>
-                    </div>
-                </form>
-            </div>
-        </div>
-    </div>
-
-    <!-- New Campaign Modal -->
-    <div id="new-campaign-modal" class="quick-action-modal">
-        <div class="quick-action-backdrop"></div>
-        <div class="quick-action-content" style="width: 520px;">
-            <div class="quick-action-header">
-                <div class="quick-action-title">
-                    <div class="quick-action-icon" style="background:linear-gradient(135deg,var(--orange),var(--pink));"><i class="fas fa-bullhorn"></i></div>
-                    <div>
-                        <h3>Launch Campaign</h3>
-                        <span>Create and schedule a new marketing campaign</span>
-                    </div>
-                </div>
-                <button class="quick-action-close" id="new-campaign-close" aria-label="Close"><i class="fas fa-xmark"></i></button>
-            </div>
-            <div style="padding: 24px;">
-                <form id="new-campaign-form" style="display: flex; flex-direction: column; gap: 16px;">
-                    <div style="display: flex; flex-direction: column; gap: 6px;">
-                        <label style="font-size: 12px; color: var(--text-muted); font-weight: 600;">Campaign Name</label>
-                        <input type="text" id="camp-name" required placeholder="e.g. Summer Sale 2026" style="background: var(--bg-surface); border: 1px solid var(--border-color); padding: 10px 12px; border-radius: 8px; color: var(--text-primary); font-family: inherit; font-size: 14px; outline: none;">
-                    </div>
-                    <div style="display: flex; gap: 16px;">
-                        <div style="flex: 1; display: flex; flex-direction: column; gap: 6px;">
-                            <label style="font-size: 12px; color: var(--text-muted); font-weight: 600;">Marketing Channel</label>
-                            <select id="camp-channel" required style="background: var(--bg-surface); border: 1px solid var(--border-color); padding: 10px 12px; border-radius: 8px; color: var(--text-primary); font-family: inherit; font-size: 14px; outline: none; appearance: none;">
-                                <option value="Email">Email Marketing</option>
-                                <option value="WhatsApp">WhatsApp Business</option>
-                                <option value="Social Media">Social Media Ads</option>
-                                <option value="Search">Search Engine Marketing</option>
-                                <option value="SMS">SMS Marketing</option>
-                            </select>
-                        </div>
-                        <div style="flex: 1; display: flex; flex-direction: column; gap: 6px;">
-                            <label style="font-size: 12px; color: var(--text-muted); font-weight: 600;">Budget (₹)</label>
-                            <input type="number" id="camp-budget" required placeholder="25000" style="background: var(--bg-surface); border: 1px solid var(--border-color); padding: 10px 12px; border-radius: 8px; color: var(--text-primary); font-family: inherit; font-size: 14px; outline: none;">
-                        </div>
-                    </div>
-                    <div style="display: flex; flex-direction: column; gap: 6px;">
-                        <label style="font-size: 12px; color: var(--text-muted); font-weight: 600;">Target Audience</label>
-                        <input type="text" id="camp-audience" required placeholder="e.g. Corporate Clients, IT Managers" style="background: var(--bg-surface); border: 1px solid var(--border-color); padding: 10px 12px; border-radius: 8px; color: var(--text-primary); font-family: inherit; font-size: 14px; outline: none;">
-                    </div>
-                    <div style="display: flex; justify-content: flex-end; gap: 12px; margin-top: 8px; padding-top: 16px; border-top: 1px solid var(--border-color);">
-                        <button type="button" class="btn btn-secondary" id="new-campaign-cancel">Cancel</button>
-                        <button type="submit" class="btn btn-primary"><i class="fas fa-rocket"></i> Launch Campaign</button>
-                    </div>
-                </form>
-            </div>
-        </div>
-    </div>
-
-    <!-- New Project Modal -->
-    <div id="new-project-modal" class="quick-action-modal">
-        <div class="quick-action-backdrop"></div>
-        <div class="quick-action-content" style="width: 500px;">
-            <div class="quick-action-header">
-                <div class="quick-action-title">
-                    <div class="quick-action-icon" style="background:linear-gradient(135deg,var(--indigo),var(--accent));"><i class="fas fa-diagram-project"></i></div>
-                    <div>
-                        <h3>Create New Project</h3>
-                        <span>Initialize a new agile workspace</span>
-                    </div>
-                </div>
-                <button class="quick-action-close" id="new-project-close" aria-label="Close"><i class="fas fa-xmark"></i></button>
-            </div>
-            <div style="padding: 24px;">
-                <form id="new-project-form" style="display: flex; flex-direction: column; gap: 16px;">
-                    <div style="display: flex; flex-direction: column; gap: 6px;">
-                        <label style="font-size: 12px; color: var(--text-muted); font-weight: 600;">Project Name</label>
-                        <input type="text" id="project-name" required placeholder="e.g. ERP Suite v4.0" style="background: var(--bg-surface); border: 1px solid var(--border-color); padding: 10px 12px; border-radius: 8px; color: var(--text-primary); font-family: inherit; font-size: 14px; outline: none;">
-                    </div>
-                    <div style="display: flex; gap: 16px;">
-                        <div style="flex: 1; display: flex; flex-direction: column; gap: 6px;">
-                            <label style="font-size: 12px; color: var(--text-muted); font-weight: 600;">Project Manager</label>
-                            <select id="project-mgr" required style="background: var(--bg-surface); border: 1px solid var(--border-color); padding: 10px 12px; border-radius: 8px; color: var(--text-primary); font-family: inherit; font-size: 14px; outline: none; appearance: none;">
-                                <option value="Rahul S.">Rahul S.</option>
-                                <option value="Priya S.">Priya S.</option>
-                                <option value="Vikram K.">Vikram K.</option>
-                                <option value="Anita P.">Anita P.</option>
-                            </select>
-                        </div>
-                        <div style="flex: 1; display: flex; flex-direction: column; gap: 6px;">
-                            <label style="font-size: 12px; color: var(--text-muted); font-weight: 600;">Priority Level</label>
-                            <select id="project-priority" required style="background: var(--bg-surface); border: 1px solid var(--border-color); padding: 10px 12px; border-radius: 8px; color: var(--text-primary); font-family: inherit; font-size: 14px; outline: none; appearance: none;">
-                                <option value="High">High Priority</option>
-                                <option value="Medium">Medium Priority</option>
-                                <option value="Low">Low Priority</option>
-                            </select>
-                        </div>
-                    </div>
-                    <div style="display: flex; flex-direction: column; gap: 6px;">
-                        <label style="font-size: 12px; color: var(--text-muted); font-weight: 600;">Deadline</label>
-                        <input type="date" id="project-deadline" required style="background: var(--bg-surface); border: 1px solid var(--border-color); padding: 10px 12px; border-radius: 8px; color: var(--text-primary); font-family: inherit; font-size: 14px; outline: none;">
-                    </div>
-                    <div style="display: flex; justify-content: flex-end; gap: 12px; margin-top: 8px; padding-top: 16px; border-top: 1px solid var(--border-color);">
-                        <button type="button" class="btn btn-secondary" id="new-project-cancel">Cancel</button>
-                        <button type="submit" class="btn btn-primary"><i class="fas fa-folder-plus"></i> Create Workspace</button>
-                    </div>
-                </form>
-            </div>
-        </div>
-    </div>
-
-    <!-- My Tasks Modal -->
-    <div id="my-tasks-modal" class="quick-action-modal">
-        <div class="quick-action-backdrop"></div>
-        <div class="quick-action-content" style="width: 580px;">
-            <div class="quick-action-header">
-                <div class="quick-action-title">
-                    <div class="quick-action-icon" style="background:linear-gradient(135deg,var(--success),var(--cyan));"><i class="fas fa-list-check"></i></div>
-                    <div>
-                        <h3>My Task Board</h3>
-                        <span>Tasks assigned to you across projects</span>
-                    </div>
-                </div>
-                <button class="quick-action-close" id="my-tasks-close" aria-label="Close"><i class="fas fa-xmark"></i></button>
-            </div>
-            <div style="padding: 24px;">
-                <div style="display: flex; flex-direction: column; gap: 12px;">
-                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
-                        <div style="font-size: 13px; font-weight: 600; color: var(--text-muted);">CURRENT SPRINT PROGRESS</div>
-                        <div style="font-size: 13px; font-weight: 700; color: var(--success);">75%</div>
-                    </div>
-                    <div style="height: 6px; background: rgba(255,255,255,0.05); border-radius: 10px; overflow: hidden;">
-                        <div style="width: 75%; height: 100%; background: linear-gradient(90deg, var(--success), var(--cyan));"></div>
-                    </div>
-                    
-                    <div id="my-tasks-list" style="margin-top: 16px; display: flex; flex-direction: column; gap: 12px;">
-                        <div style="background: var(--bg-surface); border: 1px solid var(--border-color); border-radius: 12px; padding: 16px; display: flex; justify-content: space-between; align-items: center;">
-                            <div>
-                                <div style="font-weight: 600; margin-bottom: 4px;">Update API Documentation</div>
-                                <div style="font-size: 12px; color: var(--text-muted);">ERP Suite · High Priority</div>
-                            </div>
-                            <span class="badge badge-warning">In Progress</span>
-                        </div>
-                        <div style="background: var(--bg-surface); border: 1px solid var(--border-color); border-radius: 12px; padding: 16px; display: flex; justify-content: space-between; align-items: center;">
-                            <div>
-                                <div style="font-weight: 600; margin-bottom: 4px;">Fix Dashboard Loading Lag</div>
-                                <div style="font-size: 12px; color: var(--text-muted);">Core Platform · Critical</div>
-                            </div>
-                            <span class="badge badge-info">Open</span>
-                        </div>
-                        <div style="background: var(--bg-surface); border: 1px solid var(--border-color); border-radius: 12px; padding: 16px; display: flex; justify-content: space-between; align-items: center; opacity: 0.6;">
-                            <div>
-                                <div style="font-weight: 600; margin-bottom: 4px; text-decoration: line-through;">SSO Bug Report</div>
-                                <div style="font-size: 12px; color: var(--text-muted);">Auth Module · Completed</div>
-                            </div>
-                            <span class="badge badge-success">Done</span>
-                        </div>
-                    </div>
-                </div>
-                <div style="display: flex; justify-content: flex-end; margin-top: 24px;">
-                    <button type="button" class="btn btn-primary" id="my-tasks-done">Close Board</button>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Create Deal Modal -->
-    <div id="create-deal-modal" class="quick-action-modal">
-        <div class="quick-action-backdrop"></div>
-        <div class="quick-action-content" style="width: 520px;">
-            <div class="quick-action-header">
-                <div class="quick-action-title">
-                    <div class="quick-action-icon" style="background:linear-gradient(135deg,var(--accent),var(--purple));"><i class="fas fa-handshake"></i></div>
-                    <div>
-                        <h3>Create New Deal</h3>
-                        <span>Start a new sales opportunity</span>
-                    </div>
-                </div>
-                <button class="quick-action-close" id="create-deal-close" aria-label="Close"><i class="fas fa-xmark"></i></button>
-            </div>
-            <div style="padding: 24px;">
-                <form id="create-deal-form" style="display: flex; flex-direction: column; gap: 16px;">
-                    <div style="display: flex; flex-direction: column; gap: 6px;">
-                        <label style="font-size: 12px; color: var(--text-muted); font-weight: 600;">Deal Name</label>
-                        <input type="text" id="deal-name" required placeholder="e.g. Q4 Cloud Infrastructure" style="background: var(--bg-surface); border: 1px solid var(--border-color); padding: 10px 12px; border-radius: 8px; color: var(--text-primary); font-family: inherit; font-size: 14px; outline: none;">
-                    </div>
-                    <div style="display: flex; flex-direction: column; gap: 6px;">
-                        <label style="font-size: 12px; color: var(--text-muted); font-weight: 600;">Company / Account</label>
-                        <input type="text" id="deal-company" required placeholder="Search company..." style="background: var(--bg-surface); border: 1px solid var(--border-color); padding: 10px 12px; border-radius: 8px; color: var(--text-primary); font-family: inherit; font-size: 14px; outline: none;">
-                    </div>
-                    <div style="display: flex; gap: 16px;">
-                        <div style="flex: 1; display: flex; flex-direction: column; gap: 6px;">
-                            <label style="font-size: 12px; color: var(--text-muted); font-weight: 600;">Estimated Value (₹)</label>
-                            <input type="number" id="deal-value" required placeholder="e.g. 500000" style="background: var(--bg-surface); border: 1px solid var(--border-color); padding: 10px 12px; border-radius: 8px; color: var(--text-primary); font-family: inherit; font-size: 14px; outline: none;">
-                        </div>
-                        <div style="flex: 1; display: flex; flex-direction: column; gap: 6px;">
-                            <label style="font-size: 12px; color: var(--text-muted); font-weight: 600;">Pipeline Stage</label>
-                            <select id="deal-stage" required style="background: var(--bg-surface); border: 1px solid var(--border-color); padding: 10px 12px; border-radius: 8px; color: var(--text-primary); font-family: inherit; font-size: 14px; outline: none; appearance: none;">
-                                <option value="New Leads">New Leads</option>
-                                <option value="Qualified" selected>Qualified</option>
-                                <option value="Proposal">Proposal</option>
-                                <option value="Negotiation">Negotiation</option>
-                            </select>
-                        </div>
-                    </div>
-                    <div style="display: flex; gap: 16px;">
-                        <div style="flex: 1; display: flex; flex-direction: column; gap: 6px;">
-                            <label style="font-size: 12px; color: var(--text-muted); font-weight: 600;">Win Probability (%)</label>
-                            <input type="number" id="deal-probability" min="0" max="100" value="50" style="background: var(--bg-surface); border: 1px solid var(--border-color); padding: 10px 12px; border-radius: 8px; color: var(--text-primary); font-family: inherit; font-size: 14px; outline: none;">
-                        </div>
-                        <div style="flex: 1; display: flex; flex-direction: column; gap: 6px;">
-                            <label style="font-size: 12px; color: var(--text-muted); font-weight: 600;">Deal Owner</label>
-                            <input type="text" id="deal-owner" value="Amit Kumar" style="background: var(--bg-surface); border: 1px solid var(--border-color); padding: 10px 12px; border-radius: 8px; color: var(--text-primary); font-family: inherit; font-size: 14px; outline: none;">
-                        </div>
-                    </div>
-                    <div style="display: flex; justify-content: flex-end; gap: 12px; margin-top: 8px; padding-top: 16px; border-top: 1px solid var(--border-color);">
-                        <button type="button" class="btn btn-secondary" id="create-deal-cancel">Cancel</button>
-                        <button type="submit" class="btn btn-primary"><i class="fas fa-handshake"></i> Create Deal</button>
-                    </div>
-                </form>
-            </div>
-        </div>
-    </div>
-
-    <!-- Support Ticket Modal -->
-    <div id="support-ticket-modal" class="quick-action-modal">
-        <div class="quick-action-backdrop"></div>
-        <div class="quick-action-content" style="width: 540px;">
-            <div class="quick-action-header">
-                <div class="quick-action-title">
-                    <div class="quick-action-icon" style="background:linear-gradient(135deg,var(--info),var(--accent));"><i class="fas fa-headset"></i></div>
-                    <div>
-                        <h3>Create Support Ticket</h3>
-                        <span>Log a new customer issue</span>
-                    </div>
-                </div>
-                <button class="quick-action-close" id="support-ticket-close" aria-label="Close"><i class="fas fa-xmark"></i></button>
-            </div>
-            <div style="padding: 24px;">
-                <form id="support-ticket-form" style="display: flex; flex-direction: column; gap: 16px;">
-                    <div style="display: flex; gap: 16px;">
-                        <div style="flex: 1; display: flex; flex-direction: column; gap: 6px;">
-                            <label style="font-size: 12px; color: var(--text-muted); font-weight: 600;">Ticket ID</label>
-                            <input type="text" id="ticket-number" readonly style="background: var(--bg-surface); border: 1px solid var(--border-color); padding: 10px 12px; border-radius: 8px; color: var(--text-muted); font-family: var(--font-mono); font-size: 14px; outline: none;">
-                        </div>
-                        <div style="flex: 1; display: flex; flex-direction: column; gap: 6px;">
-                            <label style="font-size: 12px; color: var(--text-muted); font-weight: 600;">Customer / Company</label>
-                            <input type="text" id="ticket-customer" required placeholder="Search customer..." style="background: var(--bg-surface); border: 1px solid var(--border-color); padding: 10px 12px; border-radius: 8px; color: var(--text-primary); font-family: inherit; font-size: 14px; outline: none;">
-                        </div>
-                    </div>
-                    <div style="display: flex; flex-direction: column; gap: 6px;">
-                        <label style="font-size: 12px; color: var(--text-muted); font-weight: 600;">Subject</label>
-                        <input type="text" id="ticket-subject" required placeholder="Brief summary of the issue" style="background: var(--bg-surface); border: 1px solid var(--border-color); padding: 10px 12px; border-radius: 8px; color: var(--text-primary); font-family: inherit; font-size: 14px; outline: none;">
-                    </div>
-                    <div style="display: flex; gap: 16px;">
-                        <div style="flex: 1; display: flex; flex-direction: column; gap: 6px;">
-                            <label style="font-size: 12px; color: var(--text-muted); font-weight: 600;">Priority</label>
-                            <select id="ticket-priority" required style="background: var(--bg-surface); border: 1px solid var(--border-color); padding: 10px 12px; border-radius: 8px; color: var(--text-primary); font-family: inherit; font-size: 14px; outline: none; appearance: none;">
-                                <option value="Low">Low</option>
-                                <option value="Medium" selected>Medium</option>
-                                <option value="High">High</option>
-                                <option value="Urgent">Urgent</option>
-                            </select>
-                        </div>
-                        <div style="flex: 1; display: flex; flex-direction: column; gap: 6px;">
-                            <label style="font-size: 12px; color: var(--text-muted); font-weight: 600;">Category</label>
-                            <select id="ticket-category" required style="background: var(--bg-surface); border: 1px solid var(--border-color); padding: 10px 12px; border-radius: 8px; color: var(--text-primary); font-family: inherit; font-size: 14px; outline: none; appearance: none;">
-                                <option value="Technical">Technical</option>
-                                <option value="Billing">Billing</option>
-                                <option value="Feature Request">Feature Request</option>
-                                <option value="Other">Other</option>
-                            </select>
-                        </div>
-                    </div>
-                    <div style="display: flex; flex-direction: column; gap: 6px;">
-                        <label style="font-size: 12px; color: var(--text-muted); font-weight: 600;">Description</label>
-                        <textarea id="ticket-description" rows="3" placeholder="Provide detailed information..." style="background: var(--bg-surface); border: 1px solid var(--border-color); padding: 10px 12px; border-radius: 8px; color: var(--text-primary); font-family: inherit; font-size: 14px; outline: none; resize: vertical;"></textarea>
-                    </div>
-                    <div style="display: flex; flex-direction: column; gap: 6px;">
-                        <label style="font-size: 12px; color: var(--text-muted); font-weight: 600;">Assign To</label>
-                        <select id="ticket-assigned" required style="background: var(--bg-surface); border: 1px solid var(--border-color); padding: 10px 12px; border-radius: 8px; color: var(--text-primary); font-family: inherit; font-size: 14px; outline: none; appearance: none;">
-                            <option value="Rahul S.">Rahul S.</option>
-                            <option value="Anita P.">Anita P.</option>
-                            <option value="Vikram K.">Vikram K.</option>
-                            <option value="Priya S.">Priya S.</option>
-                        </select>
-                    </div>
-                    <div style="display: flex; justify-content: flex-end; gap: 12px; margin-top: 8px; padding-top: 16px; border-top: 1px solid var(--border-color);">
-                        <button type="button" class="btn btn-secondary" id="support-ticket-cancel">Cancel</button>
-                        <button type="submit" class="btn btn-primary"><i class="fas fa-paper-plane"></i> Create Ticket</button>
-                    </div>
-                </form>
-            </div>
-        </div>
-    </div>
-
-    <!-- Add Task Modal -->
-    <div id="add-task-modal" class="quick-action-modal">
-        <div class="quick-action-backdrop"></div>
-        <div class="quick-action-content" style="width: 520px;">
-            <div class="quick-action-header">
-                <div class="quick-action-title">
-                    <div class="quick-action-icon" style="background:linear-gradient(135deg,var(--accent),var(--purple));"><i class="fas fa-list-check"></i></div>
-                    <div>
-                        <h3>Add New Task</h3>
-                        <span>Assign a task to the technical sprint</span>
-                    </div>
-                </div>
-                <button class="quick-action-close" id="add-task-close" aria-label="Close"><i class="fas fa-xmark"></i></button>
-            </div>
-            <div style="padding: 24px;">
-                <form id="add-task-form" style="display: flex; flex-direction: column; gap: 16px;">
-                    <div style="display: flex; flex-direction: column; gap: 6px;">
-                        <label style="font-size: 12px; color: var(--text-muted); font-weight: 600;">Task Title</label>
-                        <input type="text" id="task-title" required placeholder="e.g. Implement API Gateway" style="background: var(--bg-surface); border: 1px solid var(--border-color); padding: 10px 12px; border-radius: 8px; color: var(--text-primary); font-family: inherit; font-size: 14px; outline: none;">
-                    </div>
-                    <div style="display: flex; gap: 16px;">
-                        <div style="flex: 1; display: flex; flex-direction: column; gap: 6px;">
-                            <label style="font-size: 12px; color: var(--text-muted); font-weight: 600;">Project</label>
-                            <select id="task-project" required style="background: var(--bg-surface); border: 1px solid var(--border-color); padding: 10px 12px; border-radius: 8px; color: var(--text-primary); font-family: inherit; font-size: 14px; outline: none; appearance: none;">
-                                <option value="ERP v3.2">ERP v3.2</option>
-                                <option value="Mobile App">Mobile App</option>
-                                <option value="AI Module">AI Module</option>
-                                <option value="CRM Revamp">CRM Revamp</option>
-                            </select>
-                        </div>
-                        <div style="flex: 1; display: flex; flex-direction: column; gap: 6px;">
-                            <label style="font-size: 12px; color: var(--text-muted); font-weight: 600;">Assignee</label>
-                            <select id="task-assignee" required style="background: var(--bg-surface); border: 1px solid var(--border-color); padding: 10px 12px; border-radius: 8px; color: var(--text-primary); font-family: inherit; font-size: 14px; outline: none; appearance: none;">
-                                <option value="Rahul S.">Rahul S.</option>
-                                <option value="Anita P.">Anita P.</option>
-                                <option value="Vikram K.">Vikram K.</option>
-                                <option value="Priya S.">Priya S.</option>
-                            </select>
-                        </div>
-                    </div>
-                    <div style="display: flex; gap: 16px;">
-                        <div style="flex: 1; display: flex; flex-direction: column; gap: 6px;">
-                            <label style="font-size: 12px; color: var(--text-muted); font-weight: 600;">Priority</label>
-                            <select id="task-priority" required style="background: var(--bg-surface); border: 1px solid var(--border-color); padding: 10px 12px; border-radius: 8px; color: var(--text-primary); font-family: inherit; font-size: 14px; outline: none; appearance: none;">
-                                <option value="Low">Low</option>
-                                <option value="Medium" selected>Medium</option>
-                                <option value="High">High</option>
-                            </select>
-                        </div>
-                        <div style="flex: 1; display: flex; flex-direction: column; gap: 6px;">
-                            <label style="font-size: 12px; color: var(--text-muted); font-weight: 600;">Sprint</label>
-                            <input type="text" id="task-sprint" value="Sprint 14" style="background: var(--bg-surface); border: 1px solid var(--border-color); padding: 10px 12px; border-radius: 8px; color: var(--text-primary); font-family: inherit; font-size: 14px; outline: none;">
-                        </div>
-                    </div>
-                    <div style="display: flex; flex-direction: column; gap: 6px;">
-                        <label style="font-size: 12px; color: var(--text-muted); font-weight: 600;">Due Date</label>
-                        <input type="date" id="task-due" style="background: var(--bg-surface); border: 1px solid var(--border-color); padding: 10px 12px; border-radius: 8px; color: var(--text-primary); font-family: inherit; font-size: 14px; outline: none;">
-                    </div>
-                    <div style="display: flex; justify-content: flex-end; gap: 12px; margin-top: 8px; padding-top: 16px; border-top: 1px solid var(--border-color);">
-                        <button type="button" class="btn btn-secondary" id="add-task-cancel">Cancel</button>
-                        <button type="submit" class="btn btn-primary"><i class="fas fa-list-check"></i> Add to Backlog</button>
-                    </div>
-                </form>
-            </div>
-        </div>
-    </div>
-
-    <!-- Notification Detail Modal -->
-    <div id="notification-detail-modal" class="quick-action-modal" style="z-index: 600;">
-        <div class="quick-action-backdrop"></div>
-        <div class="quick-action-content" style="width: 500px;">
-            <div class="quick-action-header">
-                <div class="quick-action-title">
-                    <div class="quick-action-icon" style="background:linear-gradient(135deg,var(--warning),var(--orange));"><i class="fas fa-envelope-open-text"></i></div>
-                    <div>
-                        <h3 id="notif-title">Notification Detail</h3>
-                        <span id="notif-meta">Alert Details</span>
-                    </div>
-                </div>
-                <button class="quick-action-close" id="notif-close" aria-label="Close"><i class="fas fa-xmark"></i></button>
-            </div>
-            <div style="padding: 24px;">
-                <div id="notif-body" style="background: var(--bg-surface); padding: 24px; border-radius: 12px; border: 1px solid var(--border-color); color: var(--text-primary); font-size: 14px; line-height: 1.6; white-space: pre-wrap; margin-bottom: 20px; min-height: 160px; font-family: inherit;">
-                    Loading message...
-                </div>
-                <div style="display: flex; justify-content: flex-end; padding-top: 16px; border-top: 1px solid var(--border-color);">
-                    <button type="button" class="btn btn-secondary" id="notif-close-btn">Close</button>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Channel Detail Modal -->
-    <div id="channel-detail-modal" class="quick-action-modal">
-        <div class="quick-action-backdrop"></div>
-        <div class="quick-action-content" style="width: 550px;">
-            <div class="quick-action-header">
-                <div class="quick-action-title">
-                    <div id="channel-icon" class="quick-action-icon" style="background:var(--accent-gradient);"><i class="fas fa-tower-broadcast"></i></div>
-                    <div>
-                        <h3 id="channel-name">Channel Details</h3>
-                        <span id="channel-provider">Gateway Information</span>
-                    </div>
-                </div>
-                <button class="quick-action-close" id="channel-close" aria-label="Close"><i class="fas fa-xmark"></i></button>
-            </div>
-            <div style="padding: 24px;">
-                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 24px;">
-                    <div class="stat-card" style="padding: 16px;">
-                        <div style="font-size: 11px; text-transform: uppercase; letter-spacing: 1px; color: var(--text-muted); margin-bottom: 4px;">Uptime</div>
-                        <div id="channel-uptime" style="font-size: 20px; font-weight: 700; color: var(--success)">99.9%</div>
-                    </div>
-                    <div class="stat-card" style="padding: 16px;">
-                        <div style="font-size: 11px; text-transform: uppercase; letter-spacing: 1px; color: var(--text-muted); margin-bottom: 4px;">Latency</div>
-                        <div id="channel-latency" style="font-size: 20px; font-weight: 700;">45ms</div>
-                    </div>
-                </div>
-                
-                <h4 style="font-size: 12px; text-transform: uppercase; letter-spacing: 1.2px; color: var(--text-muted); margin-bottom: 12px; font-weight: 700;">Recent Gateway Logs</h4>
-                <div id="channel-history" class="activity-list" style="max-height: 250px; overflow-y: auto; background: var(--bg-surface); padding: 12px; border-radius: 12px; border: 1px solid var(--border-color);">
-                    <!-- History logs will appear here -->
-                </div>
-
-                <div style="display: flex; justify-content: flex-end; padding-top: 16px; border-top: 1px solid var(--border-color); margin-top: 24px;">
-                    <button type="button" class="btn btn-secondary" id="channel-close-btn">Close Gateway View</button>
-                </div>
-            </div>
-        </div>
-    </div>
-
-
-    <!-- Stat Detail Modal -->
-    <div id="stat-detail-modal" class="quick-action-modal" style="z-index: 650;">
-        <div class="quick-action-backdrop"></div>
-        <div class="quick-action-content" style="width: 520px;">
-            <div class="quick-action-header">
-                <div class="quick-action-title">
-                    <div id="sd-icon" class="quick-action-icon" style="background:var(--accent-gradient);"><i class="fas fa-chart-line"></i></div>
-                    <div>
-                        <h3 id="sd-name">Stat Breakdown</h3>
-                        <span id="sd-category">Detail Overview</span>
-                    </div>
-                </div>
-                <button class="quick-action-close" id="sd-close" aria-label="Close"><i class="fas fa-xmark"></i></button>
-            </div>
-            <div style="padding: 24px;">
-                <div id="sd-meta" style="margin-bottom: 20px; font-size: 14px; color: var(--text-secondary); line-height: 1.6;">
-                    Showing current records for this metric.
-                </div>
-                
-                <div id="sd-list" class="activity-list" style="max-height: 350px; overflow-y: auto;">
-                    <!-- Data will be populated here -->
-                </div>
-
-                <div style="display: flex; justify-content: flex-end; padding-top: 16px; border-top: 1px solid var(--border-color); margin-top: 24px;">
-                    <button type="button" class="btn btn-secondary" id="sd-close-btn">Close View</button>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Order Status Modal -->
-    <div id="order-status-modal" class="quick-action-modal" style="z-index: 700;">
-        <div class="quick-action-backdrop"></div>
-        <div class="quick-action-content" style="width: 420px;">
-            <div class="quick-action-header">
-                <div class="quick-action-title">
-                    <div class="quick-action-icon" style="background:linear-gradient(135deg,var(--info),var(--accent))"><i class="fas fa-exchange-alt"></i></div>
-                    <div>
-                        <h3 id="os-title">Update Order Status</h3>
-                        <span id="os-subtitle">ORDER MANAGEMENT</span>
-                    </div>
-                </div>
-                <button class="quick-action-close" onclick="document.getElementById('order-status-modal').classList.remove('open')" aria-label="Close"><i class="fas fa-xmark"></i></button>
-            </div>
-            <div style="padding: 24px;">
-                <div id="os-current" style="margin-bottom: 20px; font-size: 13px; color: var(--text-secondary);"></div>
-                <div id="os-options" style="display:flex; flex-direction:column; gap:10px;"></div>
-                <div style="display: flex; justify-content: flex-end; gap: 10px; padding-top: 20px; border-top: 1px solid var(--border-color); margin-top: 24px;">
-                    <button type="button" class="btn btn-secondary" onclick="document.getElementById('order-status-modal').classList.remove('open')">Cancel</button>
-                    <button type="button" class="btn btn-primary" id="os-confirm-btn">Update Status</button>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Edit Lead Modal -->
-    <div id="edit-lead-modal" class="quick-action-modal" style="z-index: 700;">
-        <div class="quick-action-backdrop"></div>
-        <div class="quick-action-content" style="width: 480px;">
-            <div class="quick-action-header">
-                <div class="quick-action-title">
-                    <div class="quick-action-icon" style="background:linear-gradient(135deg,var(--pink),var(--purple))"><i class="fas fa-user-pen"></i></div>
-                    <div>
-                        <h3>Edit Lead Information</h3>
-                        <span>CRM SYSTEM</span>
-                    </div>
-                </div>
-                <button class="quick-action-close" onclick="document.getElementById('edit-lead-modal').classList.remove('open')" aria-label="Close"><i class="fas fa-xmark"></i></button>
-            </div>
-            <div style="padding: 24px;">
-                <input type="hidden" id="edit-lead-id">
-                <div style="display:flex; flex-direction:column; gap:16px;">
-                    <div>
-                        <label style="display:block; font-size:12px; font-weight:700; color:var(--text-muted); text-transform:uppercase; letter-spacing:0.5px; margin-bottom:6px;">Company Name</label>
-                        <input type="text" id="edit-lead-company" style="width:100%; padding:10px 14px; background:var(--card-bg); border:1px solid var(--border-color); border-radius:8px; color:var(--text-primary); font-size:14px; outline:none;" onfocus="this.style.borderColor='var(--accent)'" onblur="this.style.borderColor='var(--border-color)'">
-                    </div>
-                    <div style="display:grid; grid-template-columns:1fr 1fr; gap:14px;">
-                        <div>
-                            <label style="display:block; font-size:12px; font-weight:700; color:var(--text-muted); text-transform:uppercase; letter-spacing:0.5px; margin-bottom:6px;">Lead Type</label>
-                            <input type="text" id="edit-lead-type" style="width:100%; padding:10px 14px; background:var(--card-bg); border:1px solid var(--border-color); border-radius:8px; color:var(--text-primary); font-size:14px; outline:none;" onfocus="this.style.borderColor='var(--accent)'" onblur="this.style.borderColor='var(--border-color)'">
-                        </div>
-                        <div>
-                            <label style="display:block; font-size:12px; font-weight:700; color:var(--text-muted); text-transform:uppercase; letter-spacing:0.5px; margin-bottom:6px;">Est. Value</label>
-                            <input type="text" id="edit-lead-value" style="width:100%; padding:10px 14px; background:var(--card-bg); border:1px solid var(--border-color); border-radius:8px; color:var(--text-primary); font-size:14px; outline:none;" onfocus="this.style.borderColor='var(--accent)'" onblur="this.style.borderColor='var(--border-color)'">
-                        </div>
-                    </div>
-                    <div>
-                        <label style="display:block; font-size:12px; font-weight:700; color:var(--text-muted); text-transform:uppercase; letter-spacing:0.5px; margin-bottom:6px;">Pipeline Stage</label>
-                        <select id="edit-lead-stage" style="width:100%; padding:10px 14px; background:var(--card-bg); border:1px solid var(--border-color); border-radius:8px; color:var(--text-primary); font-size:14px; outline:none; cursor:pointer;">
-                            <option value="New">🔵 New</option>
-                            <option value="Qualified">🟣 Qualified</option>
-                            <option value="Proposal">🟡 Proposal</option>
-                            <option value="Negotiation">🟢 Negotiation</option>
-                        </select>
-                    </div>
-                </div>
-                <div style="display: flex; justify-content: flex-end; gap: 10px; padding-top: 20px; border-top: 1px solid var(--border-color); margin-top: 24px;">
-                    <button type="button" class="btn btn-secondary" onclick="document.getElementById('edit-lead-modal').classList.remove('open')">Cancel</button>
-                    <button type="button" class="btn btn-primary" id="btn-save-lead">Save Changes</button>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Edit Project Modal -->
-    <div id="edit-project-modal" class="quick-action-modal" style="z-index: 700;">
-        <div class="quick-action-backdrop"></div>
-        <div class="quick-action-content" style="width: 480px;">
-            <div class="quick-action-header">
-                <div class="quick-action-title">
-                    <div class="quick-action-icon" style="background:linear-gradient(135deg,var(--indigo),var(--accent))"><i class="fas fa-diagram-project"></i></div>
-                    <div>
-                        <h3>Edit Project Task</h3>
-                        <span>PROJECT MANAGEMENT</span>
-                    </div>
-                </div>
-                <button class="quick-action-close" onclick="document.getElementById('edit-project-modal').classList.remove('open')" aria-label="Close"><i class="fas fa-xmark"></i></button>
-            </div>
-            <div style="padding: 24px;">
-                <input type="hidden" id="edit-project-id">
-                <div style="display:flex; flex-direction:column; gap:16px;">
-                    <div>
-                        <label style="display:block; font-size:12px; font-weight:700; color:var(--text-muted); text-transform:uppercase; letter-spacing:0.5px; margin-bottom:6px;">Task Title</label>
-                        <input type="text" id="edit-project-title" style="width:100%; padding:10px 14px; background:var(--card-bg); border:1px solid var(--border-color); border-radius:8px; color:var(--text-primary); font-size:14px; outline:none;" onfocus="this.style.borderColor='var(--accent)'" onblur="this.style.borderColor='var(--border-color)'">
-                    </div>
-                    <div style="display:grid; grid-template-columns:1fr 1fr; gap:14px;">
-                        <div>
-                            <label style="display:block; font-size:12px; font-weight:700; color:var(--text-muted); text-transform:uppercase; letter-spacing:0.5px; margin-bottom:6px;">Priority Tag</label>
-                            <input type="text" id="edit-project-tag" style="width:100%; padding:10px 14px; background:var(--card-bg); border:1px solid var(--border-color); border-radius:8px; color:var(--text-primary); font-size:14px; outline:none;" onfocus="this.style.borderColor='var(--accent)'" onblur="this.style.borderColor='var(--border-color)'">
-                        </div>
-                        <div>
-                            <label style="display:block; font-size:12px; font-weight:700; color:var(--text-muted); text-transform:uppercase; letter-spacing:0.5px; margin-bottom:6px;">Tag Color</label>
-                            <select id="edit-project-color" style="width:100%; padding:10px 14px; background:var(--card-bg); border:1px solid var(--border-color); border-radius:8px; color:var(--text-primary); font-size:14px; outline:none; cursor:pointer;">
-                                <option value="info">🔵 Info</option>
-                                <option value="warning">🟡 Warning</option>
-                                <option value="danger">🔴 Danger</option>
-                                <option value="success">🟢 Success</option>
-                                <option value="purple">🟣 Purple</option>
-                            </select>
-                        </div>
-                    </div>
-                    <div>
-                        <label style="display:block; font-size:12px; font-weight:700; color:var(--text-muted); text-transform:uppercase; letter-spacing:0.5px; margin-bottom:6px;">Kanban Status</label>
-                        <select id="edit-project-status" style="width:100%; padding:10px 14px; background:var(--card-bg); border:1px solid var(--border-color); border-radius:8px; color:var(--text-primary); font-size:14px; outline:none; cursor:pointer;">
-                            <option value="backlog">📋 Backlog</option>
-                            <option value="inProgress">🔄 In Progress</option>
-                            <option value="review">👀 Review</option>
-                            <option value="done">✅ Done</option>
-                        </select>
-                    </div>
-                </div>
-                <div style="display: flex; justify-content: flex-end; gap: 10px; padding-top: 20px; border-top: 1px solid var(--border-color); margin-top: 24px;">
-                    <button type="button" class="btn btn-secondary" onclick="document.getElementById('edit-project-modal').classList.remove('open')">Cancel</button>
-                    <button type="button" class="btn btn-primary" id="btn-save-project">Save Changes</button>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- New Order Modal -->
-    <div id="new-order-modal" class="quick-action-modal" style="z-index: 700;">
-        <div class="quick-action-backdrop"></div>
-        <div class="quick-action-content" style="width: 480px;">
-            <div class="quick-action-header">
-                <div class="quick-action-title">
-                    <div class="quick-action-icon" style="background:linear-gradient(135deg,var(--success),var(--cyan))"><i class="fas fa-cart-plus"></i></div>
-                    <div>
-                        <h3>Create Manual Order</h3>
-                        <span>E-COMMERCE</span>
-                    </div>
-                </div>
-                <button class="quick-action-close" onclick="document.getElementById('new-order-modal').classList.remove('open')" aria-label="Close"><i class="fas fa-xmark"></i></button>
-            </div>
-            <div style="padding: 24px;">
-                <div style="display:flex; flex-direction:column; gap:16px;">
-                    <div>
-                        <label style="display:block; font-size:12px; font-weight:700; color:var(--text-muted); text-transform:uppercase; letter-spacing:0.5px; margin-bottom:6px;">Customer Name</label>
-                        <input type="text" id="no-customer" placeholder="e.g. Rajesh Gupta" style="width:100%; padding:10px 14px; background:var(--card-bg); border:1px solid var(--border-color); border-radius:8px; color:var(--text-primary); font-size:14px; outline:none; transition:border 0.2s;" onfocus="this.style.borderColor='var(--accent)'" onblur="this.style.borderColor='var(--border-color)'">
-                    </div>
-                    <div style="display:grid; grid-template-columns:1fr 1fr; gap:14px;">
-                        <div>
-                            <label style="display:block; font-size:12px; font-weight:700; color:var(--text-muted); text-transform:uppercase; letter-spacing:0.5px; margin-bottom:6px;">Platform</label>
-                            <select id="no-platform" style="width:100%; padding:10px 14px; background:var(--card-bg); border:1px solid var(--border-color); border-radius:8px; color:var(--text-primary); font-size:14px; outline:none; cursor:pointer;">
-                                <option value="Shopify">🟢 Shopify</option>
-                                <option value="WooCommerce">🟣 WooCommerce</option>
-                                <option value="Amazon">🟡 Amazon</option>
-                            </select>
-                        </div>
-                        <div>
-                            <label style="display:block; font-size:12px; font-weight:700; color:var(--text-muted); text-transform:uppercase; letter-spacing:0.5px; margin-bottom:6px;">Amount (₹)</label>
-                            <input type="number" id="no-amount" placeholder="e.g. 4299" style="width:100%; padding:10px 14px; background:var(--card-bg); border:1px solid var(--border-color); border-radius:8px; color:var(--text-primary); font-size:14px; outline:none;" onfocus="this.style.borderColor='var(--accent)'" onblur="this.style.borderColor='var(--border-color)'">
-                        </div>
-                    </div>
-                    <div>
-                        <label style="display:block; font-size:12px; font-weight:700; color:var(--text-muted); text-transform:uppercase; letter-spacing:0.5px; margin-bottom:6px;">Initial Status</label>
-                        <select id="no-status" style="width:100%; padding:10px 14px; background:var(--card-bg); border:1px solid var(--border-color); border-radius:8px; color:var(--text-primary); font-size:14px; outline:none; cursor:pointer;">
-                            <option value="Processing">⏳ Processing</option>
-                            <option value="Shipped">📦 Shipped</option>
-                            <option value="Delivered">✅ Delivered</option>
-                        </select>
-                    </div>
-                </div>
-                <div style="display: flex; justify-content: flex-end; gap: 10px; padding-top: 20px; border-top: 1px solid var(--border-color); margin-top: 24px;">
-                    <button type="button" class="btn btn-secondary" onclick="document.getElementById('new-order-modal').classList.remove('open')">Cancel</button>
-                    <button type="button" class="btn btn-primary" id="no-submit-btn"><i class="fas fa-plus" style="margin-right:6px;"></i>Create Order</button>
-                </div>
-            </div>
-        </div>
-    </div>
-
-
-    <!-- Toast Notification Container -->
-    <div id="toast-container" style="position:fixed;top:20px;right:20px;z-index:9999;display:flex;flex-direction:column;gap:10px;pointer-events:none;">
-    </div>
-
-    <!-- Database -->
+    <!-- App Scripts -->
+    <script src="js/app-init.js"></script>
     <script src="js/db/core.js?v=3"></script>
     <script src="js/db/seed-hr.js"></script>
     <script src="js/db/seed-finance.js"></script>
     <script src="js/db/seed-modules.js"></script>
     <script src="js/db/seed-platform.js"></script>
     <script src="js/db/init.js"></script>
-
-    <!-- App Scripts -->
-    <script src="js/app.js?v=99"></script>
-    <script src="js/pages/dashboard.js?v=2"></script>
-    <script src="js/pages/modules1.js?v=3"></script>
-    <script src="js/pages/modules2.js?v=11"></script>
-    <script src="js/pages/modules3.js?v=2"></script>
-    <script src="js/pages/modules4.js?v=2"></script>
+    <script src="js/app.js?v=30"></script>
+    <script src="js/pages/dashboard.js?v=30"></script>
+    <script src="js/pages/modules1.js?v=30"></script>
+    <script src="js/pages/modules2.js?v=30"></script>
+    <script src="js/pages/modules3.js?v=30"></script>
+    <script src="js/pages/modules4.js?v=30"></script>
 </body>
+
 </html>
